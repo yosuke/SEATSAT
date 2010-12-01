@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<seatml>
+  <general name="sample">
+    <agent name="speechin" type="rtcin" datatype="TimedString" />
+    <agent name="speechout" type="rtcout" datatype="TimedString" />
+  </general>
+  <state name="OPEN">
+    <rule>
+      <key>hello</key>
+      <command host="speechout">Hello.</command>
+    </rule>
+    <rule>
+      <key>good afternoon</key>
+      <command host="speechout">Good afternoon.</command>
+    </rule>
+    <rule>
+      <key>good evening</key>
+      <command host="speechout">Good evening.</command>
+    </rule>
+    <rule>
+      <key>good bye</key>
+      <command host="speechout">Good bye.</command>
+    </rule>
+    <rule>
+      <key>what is your name</key>
+      <key>who are you</key>
+      <command host="speechout">I am just a face.</command>
+    </rule>
+    <rule>
+      <key>what are you doing</key>
+      <command host="speechout">I am donating myself to the research.</command>
+    </rule>
+    <rule>
+      <key>where are you from</key>
+      <command host="speechout">Munchen.</command>
+    </rule>
+  </state>
+</seatml>
