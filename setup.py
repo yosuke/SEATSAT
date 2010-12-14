@@ -27,8 +27,10 @@ if sys.platform == "win32":
     # py2exe options
     extra = {
         "console": [
-                    "seat/SEAT.py",
-                    "seat/validateseatml.py"
+                    "seatsat/SEAT.py",
+                    "seatsat/validateseatml.py",
+                    "seatsat/seatmltographviz.py",
+                    "seatsat/SoarRTC.py"
                     ],
         "options": {
             "py2exe": {
@@ -58,9 +60,10 @@ setup(name='seatsat',
         ],
     entry_points="""
     [console_scripts]
-    seat = seat.SEAT:main
-    validateseatml = seat.validateseatml:main
-    seatmltographviz = seat.seatmltographviz:main
+    seat = seatsat.SEAT:main
+    validateseatml = seatsat.validateseatml:main
+    seatmltographviz = seatsat.seatmltographviz:main
+    soarrtc = seatsat.SoarRTC:main
     """,
     **extra
     )
