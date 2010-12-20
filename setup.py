@@ -14,8 +14,9 @@ http://www.opensource.org/licenses/eclipse-1.0.txt
 
 from setuptools import setup, find_packages
 import sys, os
+from seatsat.XableRTC import *
 
-version = '1.01'
+version = '1.02'
 
 try:
     import py2exe
@@ -34,8 +35,8 @@ if sys.platform == "win32":
                     ],
         "options": {
             "py2exe": {
-                "includes": "xml.etree.ElementTree, lxml._elementpath, OpenRTM_aist, RTC, gzip",
-                "dll_excludes": ["ierutil.dll", "powrprof.dll", "msimg32.dll", "mpr.dll", "urlmon.dll", "dnsapi.dll"],
+                "includes": "xml.etree.ElementTree, lxml._elementpath, OpenRTM_aist, RTC, gzip, seatsat.XableRTC",
+                "dll_excludes": ["MSVCP90.dll", "ierutil.dll", "powrprof.dll", "msimg32.dll", "mpr.dll", "urlmon.dll", "dnsapi.dll"],
             }
         }
     }

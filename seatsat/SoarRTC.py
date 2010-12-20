@@ -18,7 +18,7 @@ import threading
 from pprint import pprint
 import OpenRTM_aist
 import RTC
-from XableRTC import *
+from seatsat.XableRTC import *
 from Python_sml_ClientInterface import *
 
 class SoarWrap(threading.Thread):
