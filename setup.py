@@ -63,6 +63,7 @@ setup(name='seatsat',
     seat = seatsat.SEAT:main
     validateseatml = seatsat.validateseatml:main
     seatmltographviz = seatsat.seatmltographviz:main
+    seatmltosrgs = seatsat.seatmltosrgs:main
     soarrtc = seatsat.SoarRTC:main
     """,
     **extra
