@@ -13,7 +13,7 @@
 ;General
 
 !define PACKAGE_NAME "SEATSAT"
-!define PACKAGE_VERSION "1.01"
+!define PACKAGE_VERSION "1.02"
 !define OUTFILE "${PACKAGE_NAME}-${PACKAGE_VERSION}-installer.exe"
 !define TOP_SRCDIR "..\.."
 !define TOP_BUILDDIR "..\.."
@@ -86,9 +86,10 @@ Section $(TEXT_SecBase) SecBase
   ; Main executables
   File "${TOP_BUILDDIR}\dist\SEAT.exe"
   File "${TOP_BUILDDIR}\dist\validateseatml.exe"
+  File "${TOP_BUILDDIR}\dist\SoarRTC.exe"
   File "${TOP_BUILDDIR}\dist\w9xpopen.exe"
   File "rtc.conf"
-  File "${TOP_SRCDIR}\SEAT\seatml.xsd"
+  File "${TOP_SRCDIR}\seatsat\seatml.xsd"
 
   ; Required Libralies
   File /r "${TOP_BUILDDIR}\dist\*.pyd"
@@ -99,6 +100,7 @@ Section $(TEXT_SecBase) SecBase
 ;  File "/oname=ChangeLog.txt" "${TOP_SRCDIR}\ChangeLog"
   File "/oname=Authors.txt" "${TOP_SRCDIR}\AUTHORS"
   File "/oname=License.txt" "${TOP_SRCDIR}\COPYING"
+  File "/oname=License-Soar.txt" "\Soar-Suite-9.3.0-win-x86\license.txt"
 
   !insertmacro UNINSTALL.LOG_CLOSE_INSTALL
 
@@ -125,6 +127,7 @@ Section $(TEXT_SecBase) SecBase
   CreateShortCut "${SCDIR}\Uninstall SEATSAT.lnk" "$INSTDIR\uninstall.exe"
   CreateShortCut "${SCDIR}\SEAT.lnk" "$INSTDIR\SEAT.exe" "--gui"
   CreateShortCut "${SCDIR}\validateseatml.lnk" "$INSTDIR\validateseatml.exe" "--gui"
+  CreateShortCut "${SCDIR}\SoarRTC.lnk" "$INSTDIR\SoarRTC.exe" "--gui"
 SectionEnd
 
 ;--------------------------------
@@ -171,6 +174,7 @@ Section "Uninstall"
   Delete "${SCDIR}\Uninstall SEATSAT.lnk"
   Delete "${SCDIR}\SEAT.lnk"
   Delete "${SCDIR}\validateseatml.lnk"
+  Delete "${SCDIR}\SoarRTC.lnk"
   RMDir "${SCDIR}"
 
   DeleteRegKey /ifempty ${INSTDIR_REG_ROOT} "${INSTDIR_REG_KEY}"

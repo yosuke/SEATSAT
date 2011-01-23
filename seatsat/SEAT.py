@@ -294,7 +294,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
     def loadSEATML(self, files):
         for f in files:
             f = f.replace("\\", "\\\\")
-            print "load script file: " + f
+            #print "load script file: " + f
             try:
                 doc = etree.parse(f)
             except etree.XMLSyntaxError, e:
@@ -302,7 +302,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
                 print e
                 myexit()
             except IOError, e:
-                print "[error] IO error: unable to open file ", file
+                print "[error] IO error: unable to open file " + f
                 print e
                 myexit()
             try:
