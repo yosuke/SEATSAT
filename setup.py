@@ -31,6 +31,7 @@ if sys.platform == "win32":
                     "seatsat/SEAT.py",
                     "seatsat/validateseatml.py",
                     "seatsat/seatmltographviz.py",
+                    "seatsat/seatmltosrgs.py",
                     "seatsat/SoarRTC.py"
                     ],
         "options": {
