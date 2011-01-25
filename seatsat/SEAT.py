@@ -29,14 +29,6 @@ import RTC
 from lxml import etree
 from BeautifulSoup import BeautifulSoup
 
-# signal handler
-def myhandler(code, val):
-    global mainloop
-    print 'SEAT: terminating...'
-    mgr = OpenRTM_aist.Manager.instance()
-    mgr.terminate()
-    mainloop = False
-
 class SocketAdaptor(threading.Thread):
     def __init__(self, seat, name, host, port):
         threading.Thread.__init__(self)
@@ -46,27 +38,42 @@ class SocketAdaptor(threading.Thread):
         self.port = port
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connected = False
+        self.mainloop = True
         self.start()
 
     def run(self):
-        global mainloop
-        while mainloop:
+        while self.mainloop:
             if self.connected == False:
                 try:
                     self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     self.socket.connect((self.host, self.port))
+                    self.socket.settimeout(1)
                     self.connected = True
                 except socket.error:
+                    print "reconnect error"
                     time.sleep(1)
+                except:
+                    print traceback.format_exc()
             if self.connected == True:
                 try:
                     data = self.socket.recv(1024)
-                    self.seat.processResult(self.name, data)
+                    if len(data) != 0:
+                        self.seat.processResult(self.name, data)
+                except socket.timeout:
+                    pass
                 except socket.error:
                     print traceback.format_exc()
                     self.socket.close()
                     self.connected = False
+                except:
+                    print traceback.format_exc()
 
+    def terminate(self):
+        self.mainloop = False
+        if self.connected == True:
+            self.socket.close()
+            self.connected = False
+        
     def send(self, name, msg):
         if self.connected == False:
             try:
@@ -133,6 +140,16 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
 
     def onInitialize(self):
         self.bindParameter("scriptfile", self._scriptfile, "none", self.scriptfileTrans)
+        return RTC.RTC_OK
+
+    def onFinalize(self):
+        try:
+            for a in self.adaptors.itervalues():
+                if isinstance(a, SocketAdaptor):
+                    a.terminate()
+                    a.join()
+        except:
+            print traceback.format_exc()
         return RTC.RTC_OK
 
     def scriptfileTrans(self, _type, _str): 
@@ -473,7 +490,7 @@ class SEATManager:
         self.manager.activateManager()
 
     def start(self):
-        self.manager.runManager(True)
+        self.manager.runManager(False)
 
     def moduleInit(self, manager):
         profile=OpenRTM_aist.Properties(defaults_str=seat_spec)
@@ -485,8 +502,6 @@ def usage():
     print "usage: %s [-f rtc.conf] [--help] [--gui] [scriptfile]" % (os.path.basename(sys.argv[0]),)
 
 def main():
-    global mainloop
-
     locale.setlocale(locale.LC_CTYPE, "")
     encoding = locale.getlocale()[1]
     if not encoding:
@@ -494,17 +509,8 @@ def main():
     sys.stdout = codecs.getwriter(encoding)(sys.stdout, errors = "replace")
     sys.stderr = codecs.getwriter(encoding)(sys.stderr, errors = "replace")
 
-    mainloop = True
     seat = SEATManager()
     seat.start()
-
-    signal.signal(signal.SIGINT, myhandler)
-
-    while mainloop:
-        try:
-            time.sleep(1)
-        except:
-            pass
 
 if __name__=='__main__':
     main()
