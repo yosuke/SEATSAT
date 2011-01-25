@@ -317,11 +317,11 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
             except etree.XMLSyntaxError, e:
                 print "[error] invalid xml syntax"
                 print e
-                myexit()
+                sys.exit()
             except IOError, e:
                 print "[error] IO error: unable to open file " + f
                 print e
-                myexit()
+                sys.exit()
             try:
                 self._xmlschema.assert_(doc)
             except AssertionError, b:
