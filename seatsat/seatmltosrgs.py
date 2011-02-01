@@ -13,15 +13,29 @@ Licensed under the Eclipse Public License -v 1.0 (EPL)
 http://www.opensource.org/licenses/eclipse-1.0.txt
 '''
 
-import sys, os, codecs
+import sys
+import os
+import codecs
+import optparse
+from __init__ import __version__
 from xml.dom.minidom import parse
 
 def main():
-    if len(sys.argv) < 2:
-        print "usage: %s [seatml]" % sys.argv[0]
-        quit()
-
     sys.stdout = codecs.getwriter('utf_8')(sys.stdout)
+
+    parser = optparse.OptionParser(version=__version__, usage="%prog [seatmlfile]")
+    parser.add_option('-v', '--verbose', dest='verbose', action='store_true',
+                      default=False,
+                      help='output verbose information')
+    try:
+        opts, args = parser.parse_args()
+    except optparse.OptionError, e:
+        print >>sys.stderr, 'OptionError:', e
+        sys.exit(1)
+
+    if len(args) == 0:
+        parser.error("wrong number of arguments")
+        sys.exit(1)
 
     print '''\
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -36,7 +50,7 @@ def main():
 
   <rule id="command">
     <one-of>'''
-    for f in sys.argv[1:]:
+    for f in args[1:]:
         doc = parse(f)
         for s in doc.getElementsByTagName('state'):
             for r in s.getElementsByTagName('rule'):

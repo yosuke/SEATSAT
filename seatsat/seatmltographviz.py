@@ -13,39 +13,58 @@ Licensed under the Eclipse Public License -v 1.0 (EPL)
 http://www.opensource.org/licenses/eclipse-1.0.txt
 '''
 
-import sys, os, codecs
+import sys
+import os
+import codecs
+import optparse
+from __init__ import __version__
 from xml.dom.minidom import parse
 
-if len(sys.argv) < 2:
-    print "usage: %s [seatml]" % sys.argv[0]
-    quit()
+def main():
+    sys.stdout = codecs.getwriter('utf_8')(sys.stdout)
+    
+    parser = optparse.OptionParser(version=__version__, usage="%prog [seatmlfile]")
+    parser.add_option('-v', '--verbose', dest='verbose', action='store_true',
+                      default=False,
+                      help='output verbose information')
+    try:
+        opts, args = parser.parse_args()
+    except optparse.OptionError, e:
+        print >>sys.stderr, 'OptionError:', e
+        sys.exit(1)
 
-sys.stdout = codecs.getwriter('utf_8')(sys.stdout)
+    if len(args) == 0:
+        parser.error("wrong number of arguments")
+        sys.exit(1)
 
-print 'digraph seatml {'
-print 'graph [rankdir=LR];'
+    print 'digraph seatml {'
+    print 'graph [rankdir=LR];'
+    
+    doc = parse(args[0])
+    states = map(lambda x:x.getAttribute('name'), doc.getElementsByTagName('state'))
+    states.extend(map(lambda x:x.childNodes[0].data, doc.getElementsByTagName('statetransition')))
+    print 'node [shape = doublecircle]; %s;' % ' '.join(states)
+    print 'node [shape = circle];'
+    #print 'edge [fontname = "osaka"];'
+    
+    for f in sys.argv[1:]:
+        doc = parse(f)
+        for s in doc.getElementsByTagName('state'):
+            for r in s.getElementsByTagName('rule'):
+                lab = '[label = "'
+                #lab = lab + ",".join(map(lambda x: x.childNodes[0].data, r.getElementsByTagName('key')))
+                source = r.getElementsByTagName('key').item(0).getAttribute('source')
+                if source:
+                    lab = lab + source + "="
+                lab = lab + r.getElementsByTagName('key').item(0).childNodes[0].data
+                lab = lab + '"]'
+                t = r.getElementsByTagName('statetransition')
+                if len(t) > 0:
+                    print "%s -> %s %s;" % (s.getAttribute('name'), t.item(0).childNodes[0].data, lab)
+                else:
+                    print "%s -> %s %s;" % (s.getAttribute('name'), s.getAttribute('name'), lab)
+    print '}'
 
-doc = parse(sys.argv[1])
-states = map(lambda x:x.getAttribute('name'), doc.getElementsByTagName('state'))
-states.extend(map(lambda x:x.childNodes[0].data, doc.getElementsByTagName('statetransition')))
-print 'node [shape = doublecircle]; %s;' % ' '.join(states)
-print 'node [shape = circle];'
-#print 'edge [fontname = "osaka"];'
+if __name__ == '__main__':
+    main()
 
-for f in sys.argv[1:]:
-    doc = parse(f)
-    for s in doc.getElementsByTagName('state'):
-        for r in s.getElementsByTagName('rule'):
-            lab = '[label = "'
-            #lab = lab + ",".join(map(lambda x: x.childNodes[0].data, r.getElementsByTagName('key')))
-            source = r.getElementsByTagName('key').item(0).getAttribute('source')
-            if source:
-                lab = lab + source + "="
-            lab = lab + r.getElementsByTagName('key').item(0).childNodes[0].data
-            lab = lab + '"]'
-            t = r.getElementsByTagName('statetransition')
-            if len(t) > 0:
-                print "%s -> %s %s;" % (s.getAttribute('name'), t.item(0).childNodes[0].data, lab)
-            else:
-                print "%s -> %s %s;" % (s.getAttribute('name'), s.getAttribute('name'), lab)
-print '}'
