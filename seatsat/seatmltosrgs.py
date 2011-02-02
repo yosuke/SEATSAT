@@ -50,7 +50,7 @@ def main():
 
   <rule id="command">
     <one-of>'''
-    for f in args[1:]:
+    for f in args[0:]:
         doc = parse(f)
         for s in doc.getElementsByTagName('state'):
             for r in s.getElementsByTagName('rule'):
