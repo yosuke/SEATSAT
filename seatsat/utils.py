@@ -73,7 +73,7 @@ def addmanageropts(parser):
 
 def genmanagerargs(opt):
     args = [sys.argv[0],]
-    if opt.managerseervice == True:
+    if opt.managerservice == True:
         args.append('-a')
     if opt.configfile is not None:
         args.append('-f')

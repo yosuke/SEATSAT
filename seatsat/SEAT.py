@@ -121,6 +121,9 @@ class DataListener(OpenRTM_aist.ConnectorDataListenerT):
 class SEAT(OpenRTM_aist.DataFlowComponentBase):
     def __init__(self, manager):
         OpenRTM_aist.DataFlowComponentBase.__init__(self, manager)
+        self._logger = OpenRTM_aist.Manager.instance().getLogbuf("SEAT")
+        self._logger.RTC_INFO("SEAT (Speech Event Action Transfer) version " + __version__)
+        self._logger.RTC_INFO("Copyright (C) 2009-2010 Yosuke Matsusaka and Isao Hara")
         
         if hasattr(sys, "frozen"):
             self._basedir = os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding()))
@@ -139,7 +142,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         self._data = {}
         self._port = {}
         self._scriptfile = ["none"]
-        print "component created"
+        self._logger.RTC_INFO("component created")
 
     def onInitialize(self):
         self.bindParameter("scriptfile", self._scriptfile, "none", self.scriptfileTrans)
@@ -152,20 +155,20 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
                     a.terminate()
                     a.join()
         except:
-            print traceback.format_exc()
+            self._logger.RTC_ERROR(traceback.format_exc())
         return RTC.RTC_OK
 
     def scriptfileTrans(self, _type, _str): 
-        print "scriptfile = " + _str
+        self._logger.RTC_INFO("scriptfile = " + _str)
         if _str != "none":
             try:
                 self.loadSEATML(_str.split(','))
             except:
-                print traceback.format_exc()
+                self._logger.RTC_ERROR(traceback.format_exc())
         return OpenRTM_aist.stringTo(_type, _str)
 
     def createInPort(self, name, type=RTC.TimedString):
-        print "create inport: " + name
+        self._logger.RTC_INFO("create inport: " + name)
         self._data[name] = type(RTC.Time(0,0), None)
         self._port[name] = OpenRTM_aist.InPort(name, self._data[name])
         self._port[name].addConnectorDataListener(OpenRTM_aist.ConnectorDataListenerType.ON_BUFFER_WRITE,
@@ -173,7 +176,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         self.registerInPort(name, self._port[name])
 
     def createOutPort(self, name, type=RTC.TimedString):
-        print "create outport: " + name
+        self._logger.RTC_INFO("create outport: " + name)
         self._data[name] = type(RTC.Time(0,0), None)
         self._port[name] = OpenRTM_aist.OutPort(name, self._data[name], OpenRTM_aist.RingBuffer(8))
         self.registerOutPort(name, self._port[name])
@@ -184,13 +187,13 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
                 data.data = data.data.decode('utf-8')
             self.processResult(name, data.data)
         except:
-            print traceback.format_exc()
+            self._logger.RTC_ERROR(traceback.format_exc())
 
     def onExecute(self, ec_id):
         return RTC.RTC_OK
 
     def send(self, name, data):
-        print "sending command %s (%s)" % (data, name)
+        self._logger.RTC_INFO("sending command %s (%s)" % (data, name))
         dtype = self.adaptortype[name][1]
         if dtype == str:
             ndata = dtype(data.encode('utf-8'))
@@ -209,7 +212,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         except UnicodeDecodeError:
             s = str(s).encode('string_escape')
             s = unicode(s)
-        print "got input %s (%s)" % (s, host)
+        self._logger.RTC_INFO("got input %s (%s)" % (s, host))
         cmds = None
         if s.count('<?xml') > 0:
             doc = BeautifulSoup(s)
@@ -226,14 +229,14 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         else:
             cmds = self.lookupwithdefault(self.currentstate, host, s)
         if not cmds:
-            print "no command found"
+            self._logger.RTC_INFO("no command found")
             return False
         for c in cmds:
             self.activateCommand(c)
         return True
 
     def lookupwithdefault(self, state, host, s):
-        print 'looking up... %s' % (s,)
+        self._logger.RTC_INFO('looking up... %s' % (s,))
         cmds = self.lookupcommand(state, host, s)
         if not cmds:
             cmds = self.lookupcommand(state, 'default', s)
@@ -269,7 +272,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
                 ad = self.adaptors[host]
                 ad.send(host, data)
             except KeyError:
-                print "no such adaptor"
+                self._logger.RTC_ERROR("no such adaptor:" + host)
         elif c[0] == 't':
             func = c[1]
             data = c[2]
@@ -278,11 +281,11 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
                 self.currentstate = data
             elif (func == "pop"):
                 if self.statestack.__len__() == 0:
-                    print "state buffer is empty"
+                    self._logger.RTC_WARN("state buffer is empty")
                     return
                 self.currentstate = self.statestack.pop()
             else:
-                print "state transition from "+self.currentstate+" to "+data
+                self._logger.RTC_INFO("state transition from "+self.currentstate+" to "+data)
                 self.currentstate = data
 
     def getDataType(self, s):
@@ -313,22 +316,19 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
     def loadSEATML(self, files):
         for f in files:
             f = f.replace("\\", "\\\\")
-            #print "load script file: " + f
+            self._logger.RTC_INFO(u"load script file: " + f)
             try:
                 doc = etree.parse(f)
             except etree.XMLSyntaxError, e:
-                print "[error] invalid xml syntax"
-                print e
-                sys.exit()
+                self._logger.RTC_ERROR(u"invalid xml syntax: " + unicode(e))
+                continue
             except IOError, e:
-                print "[error] IO error: unable to open file " + f
-                print e
-                sys.exit()
+                self._logger.RTC_ERROR(u"unable to open file " + f + ": " + unicode(e))
+                continue
             try:
                 self._xmlschema.assert_(doc)
             except AssertionError, b:
-                print "[error] invalid script file: " + f
-                print b
+                self._logger.RTC_ERROR(u"invalid script file: " + f + ": " + unicode(b))
                 continue
             for g in doc.findall('general'):
                 for a in g.findall('agent'):
@@ -366,7 +366,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
                             words.extend(word)
                         else:
                             for w in word:
-                                print "register "+name+":"+source+":"+w
+                                self._logger.RTC_INFO("register "+name+":"+source+":"+w)
                                 self.keys[name+":"+source+":"+w] = commands # register commands to key table
                     for k in r.findall('regkey'): # get keys
                         try:
@@ -376,18 +376,19 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
                         regkeys.append([re.compile(k.text), commands])
                         self.regkeys[name+":default"] = regkeys
                     for w in words:
-                        print "register " + name + ":default:" + w
+                        self._logger.RTC_INFO("register " + name + ":default:" + w)
                         self.keys[name+":default:"+w] = commands # register commands to key table
                 self.states.extend([name])
         if len(self.states) == 0:
-            print "[error] no available state"
-            exit()
+            self._logger.RTC_ERROR("no available state")
+            return 1
         if self.states.count("start") > 0:
             self.currentstate = "start"
         else:
             self.currentstate = self.states[0]
-        print "current state " + self.currentstate
-        print "Started successfully"
+        self._logger.RTC_INFO("current state " + self.currentstate)
+        self._logger.RTC_INFO("loaded successfully")
+        return 0
 
     def decompString(self, strs):
         ret = []
@@ -490,10 +491,12 @@ class SEATManager:
         self.manager.runManager(False)
 
     def moduleInit(self, manager):
-        profile=OpenRTM_aist.Properties(defaults_str=seat_spec)
+        profile = OpenRTM_aist.Properties(defaults_str=seat_spec)
         manager.registerFactory(profile, SEAT, OpenRTM_aist.Delete)
         self.comp = manager.createComponent("SEAT?exec_cxt.periodic.rate=1")
-        self.comp.loadSEATML(self._scriptfiles)
+        ret = self.comp.loadSEATML(self._scriptfiles)
+        if ret != 0:
+            print >>sys.stderr, 'unable to load script file: see log file for details...'
 
 def main():
     locale.setlocale(locale.LC_CTYPE, "")
