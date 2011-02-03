@@ -56,7 +56,7 @@ class SoarWrap(threading.Thread):
 SoarRTC_spec = ["implementation_id", "SoarRTC",
                 "type_name",         "SoarRTC",
                 "description",       "Soar general artificial intelligence component (python implementation)",
-                "version",           "1.0.0",
+                "version",           __version__,
                 "vendor",            "AIST",
                 "category",          "communication",
                 "activity_type",     "DataFlowComponent",
@@ -76,7 +76,7 @@ class SoarRTC(XableRTC):
         self._timewme = {}
 
     def onInitialize(self):
-        self._rtcout.RTC_TRACE("onInitialize")
+        OpenRTM_aist.DataFlowComponentBase.onInitialize(self)
         XableRTC.onInitialize(self)
         # create outport for command
         self._commanddata = RTC.TimedString(RTC.Time(0,0), "")
@@ -86,17 +86,17 @@ class SoarRTC(XableRTC):
         return RTC.RTC_OK
     
     def onActivated(self, ec_id):
-        self._rtcout.RTC_TRACE("onActivated(%d)",ec_id)
+        OpenRTM_aist.DataFlowComponentBase.onActivated(self, ec_id)
         self._soar.start()
         return RTC.RTC_OK
 
     def onDeactivated(self, ec_id):
-        self._rtcout.RTC_TRACE("onDeactivated(%d)",ec_id)
+        OpenRTM_aist.DataFlowComponentBase.onDeactivated(self, ec_id)
         self._soar.stop()
         return RTC.RTC_OK
 
     def onFinalize(self):
-        self._rtcout.RTC_TRACE("onFinalize")
+        OpenRTM_aist.DataFlowComponentBase.onFinalize(self)
         self._soar.terminate()
         return RTC.RTC_OK
 
@@ -129,6 +129,7 @@ class SoarRTC(XableRTC):
             self._logger.RTC_ERROR(traceback.format_exc())
 
     def onExecute(self, ec_id):
+        OpenRTM_aist.DataFlowComponentBase.onExecute(self, ec_id)
         numberCommands = self._soar._agent.GetNumberCommands()
         for i in range(0, numberCommands):
             command = self._soar._agent.GetCommand(i)

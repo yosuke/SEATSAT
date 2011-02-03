@@ -96,7 +96,7 @@ class SocketAdaptor(threading.Thread):
 seat_spec = ["implementation_id", "SEAT",
              "type_name",         "SEAT",
              "description",       "Speech Event Action Transfer",
-             "version",           "1.0.0",
+             "version",           __version__,
              "vendor",            "Yosuke Matsusaka and Isao Hara, AIST",
              "category",          "Speech",
              "activity_type",     "DataFlowComponent",
@@ -145,10 +145,12 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         self._logger.RTC_INFO("component created")
 
     def onInitialize(self):
+        OpenRTM_aist.DataFlowComponentBase.onInitialize(self)
         self.bindParameter("scriptfile", self._scriptfile, "none", self.scriptfileTrans)
         return RTC.RTC_OK
 
     def onFinalize(self):
+        OpenRTM_aist.DataFlowComponentBase.onFinalize(self)
         try:
             for a in self.adaptors.itervalues():
                 if isinstance(a, SocketAdaptor):
@@ -190,6 +192,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
             self._logger.RTC_ERROR(traceback.format_exc())
 
     def onExecute(self, ec_id):
+        OpenRTM_aist.DataFlowComponentBase.onExecute(self, ec_id)
         return RTC.RTC_OK
 
     def send(self, name, data):

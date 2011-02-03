@@ -21,6 +21,7 @@ import locale
 import optparse
 from __init__ import __version__
 from lxml import etree
+import utils
 
 def main():
     global opts
@@ -51,10 +52,7 @@ def main():
         sys.exit(1)
 
     if opts.guimode == True:
-        import Tkinter, tkFileDialog
-        root = Tkinter.Tk()
-        root.withdraw()
-        args.append(tkFileDialog.askopenfilename(title="select script file"))
+        args.append(utils.askopenfilename(title="select script file"))
 
     if len(args) == 0:
         parser.error("wrong number of arguments")
