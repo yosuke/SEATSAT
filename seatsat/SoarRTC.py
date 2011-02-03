@@ -22,7 +22,7 @@ import traceback
 import types
 import threading
 import optparse
-from pprint import pprint
+from pprint import pformat
 import OpenRTM_aist
 import RTC
 from XableRTC import *
@@ -68,6 +68,9 @@ SoarRTC_spec = ["implementation_id", "SoarRTC",
 class SoarRTC(XableRTC):
     def __init__(self, manager):
         XableRTC.__init__(self, manager)
+        self._logger = OpenRTM_aist.Manager.instance().getLogbuf("SoarRTC")
+        self._logger.RTC_INFO("SoarRTC version " + __version__)
+        self._logger.RTC_INFO("Copyright (C) 2010 Yosuke Matsusaka")
         self._soar = None
         self._datawme = {}
         self._timewme = {}
@@ -99,8 +102,7 @@ class SoarRTC(XableRTC):
 
     def onData(self, info, data):
         try:
-            pprint(info)
-            pprint(data)
+            self._logger.RTC_INFO('got input: ' + pformat(info) + ', ' + pformat(data))
             t = data.tm.sec + data.tm.nsec * 1e-9
             agent = self._soar._agent
             portid = (info['component'], info['port'])
@@ -115,7 +117,7 @@ class SoarRTC(XableRTC):
                 elif ot == types.FloatType:
                     self._datawme[portid] = agent.CreateFloatWME(wme, 'data', data.data)
                 else:
-                    print 'unsupported data type'
+                    self._logger.RTC_ERROR('unsupported data type: ' + str(ot))
                 self._timewme[portid] = agent.CreateFloatWME(wme, 'time', t)
                 for k, v in info.iteritems():
                     agent.CreateStringWME(wme, k, v)
@@ -124,7 +126,7 @@ class SoarRTC(XableRTC):
                 agent.Update(self._datawme[portid], data.data)
             agent.Commit()
         except:
-            print traceback.format_exc()
+            self._logger.RTC_ERROR(traceback.format_exc())
 
     def onExecute(self, ec_id):
         numberCommands = self._soar._agent.GetNumberCommands()
