@@ -53,3 +53,38 @@ def askopenfilenames(title=''):
             sel = root.tk.splitlist(sel)
         return sel
     return None
+
+def addmanageropts(parser):
+    parser.add_option('-a', '--manager-service', dest='managerservice', action='store_true',
+                      default=False,
+                      help='enable manager to be controlled as corba servant')
+    parser.add_option('-f', '--config-file', dest='configfile', action='store',
+                      default=None,
+                      help='specify custom configuration file')
+    parser.add_option('-o', '--option', dest='option', action='append',
+                      default=None,
+                      help='specify custom configuration parameter')
+    parser.add_option('-p', '--port', dest='port', action='store',
+                      default=None,
+                      help='specify custom corba endpoint')
+    parser.add_option('-d', '--master-mode', dest='mastermode', action='store_true',
+                      default=False,
+                      help='configure manager to be master')
+
+def genmanagerargs(opt):
+    args = [sys.argv[0],]
+    if opt.managerseervice == True:
+        args.append('-a')
+    if opt.configfile is not None:
+        args.append('-f')
+        args.append(opt.configfile)
+    if opt.option is not None:
+        for o in opt.option:
+            args.append('-o')
+            args.append(o)
+    if opt.port is not None:
+        args.append('-p')
+        args.append(port)
+    if opt.mastermode == True:
+        args.append('-d')
+

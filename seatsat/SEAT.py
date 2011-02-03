@@ -23,11 +23,14 @@ import signal
 import re
 import traceback
 import socket
+import optparse
 import threading
 import OpenRTM_aist
 import RTC
 from lxml import etree
 from BeautifulSoup import BeautifulSoup
+from __init__ import __version__
+import utils
 
 class SocketAdaptor(threading.Thread):
     def __init__(self, seat, name, host, port):
@@ -184,7 +187,6 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
             print traceback.format_exc()
 
     def onExecute(self, ec_id):
-        time.sleep(1)
         return RTC.RTC_OK
 
     def send(self, name, data):
@@ -458,34 +460,29 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
 
 class SEATManager:
     def __init__(self):
+        parser = optparse.OptionParser(version=__version__, usage="%prog [seatmlfile]")
+        utils.addmanageropts(parser)
+        parser.add_option('-g', '--gui', dest='guimode', action="store_true",
+                          default=False,
+                          help='show file open dialog in GUI')
         try:
-            opts, args = getopt.getopt(sys.argv[1:], "adlf:o:p:hg", ["help", "gui"])
-        except getopt.GetoptError:
-            usage()
-            sys.exit()
-        managerargs = [sys.argv[0]]
-        for o, a in opts:
-            if o in ("-a", "-d", "-l"):
-                managerargs.append(o)
-            if o in ("-f", "-o", "-p"):
-                managerargs.append(o, a)
-            if o in ("-h", "--help"):
-                usage()
-                sys.exit()
-            if o in ("-g", "--gui"):
-                import Tkinter, tkFileDialog
-                root = Tkinter.Tk()
-                root.withdraw()
-                sel = tkFileDialog.askopenfilenames(title="select script files")
-                if isinstance(sel, unicode):
-                    sel = root.tk.splitlist(sel)
+            opts, args = parser.parse_args()
+        except optparse.OptionError, e:
+            print >>sys.stderr, 'OptionError:', e
+            sys.exit(1)
+
+        if opts.guimode == True:
+            sel = utils.askopenfilenames(title="select script files")
+            if sel is not None:
                 args.extend(sel)
-        if len(args) <= 0:
-            usage()
-            sys.exit()
+    
+        if len(args) == 0:
+            parser.error("wrong number of arguments")
+            sys.exit(1)
+
         self._scriptfiles = args
         self.comp = None
-        self.manager = OpenRTM_aist.Manager.init(managerargs)
+        self.manager = OpenRTM_aist.Manager.init(utils.genmanagerargs(opts))
         self.manager.setModuleInitProc(self.moduleInit)
         self.manager.activateManager()
 
@@ -497,9 +494,6 @@ class SEATManager:
         manager.registerFactory(profile, SEAT, OpenRTM_aist.Delete)
         self.comp = manager.createComponent("SEAT?exec_cxt.periodic.rate=1")
         self.comp.loadSEATML(self._scriptfiles)
-
-def usage():
-    print "usage: %s [-f rtc.conf] [--help] [--gui] [scriptfile]" % (os.path.basename(sys.argv[0]),)
 
 def main():
     locale.setlocale(locale.LC_CTYPE, "")

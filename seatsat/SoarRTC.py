@@ -13,13 +13,22 @@ Licensed under the Eclipse Public License -v 1.0 (EPL)
 http://www.opensource.org/licenses/eclipse-1.0.txt
 '''
 
-import os, sys, time, codecs, locale, traceback, types
+import os
+import sys
+import time
+import codecs
+import locale
+import traceback
+import types
 import threading
+import optparse
 from pprint import pprint
 import OpenRTM_aist
 import RTC
-from seatsat.XableRTC import *
+from XableRTC import *
 from Python_sml_ClientInterface import *
+from __init__ import __version__
+import utils
 
 class SoarWrap(threading.Thread):
     def __init__(self):
@@ -132,8 +141,16 @@ class SoarRTC(XableRTC):
 
 class SoarRTCManager:
     def __init__(self):
+        parser = optparse.OptionParser(version=__version__)
+        utils.addmanageropts(parser)
+        try:
+            opts, args = parser.parse_args()
+        except optparse.OptionError, e:
+            print >>sys.stderr, 'OptionError:', e
+            sys.exit(1)
+
         self._comp = None
-        self._manager = OpenRTM_aist.Manager.init(sys.argv)
+        self._manager = OpenRTM_aist.Manager.init(utils.genmanagerargs(opts))
         self._manager.setModuleInitProc(self.moduleInit)
         self._manager.activateManager()
 
