@@ -20,10 +20,27 @@ import optparse
 from __init__ import __version__
 from xml.dom.minidom import parse
 
+__doc__ = 'Generate W3C-SRGS grammar from the SEAT script file.'
+
+__examples__ = '''
+Examples:
+
+- Generate SRGS grammar from the SEAT script file.
+
+  ::
+  
+  $ seatmltosrgs sample.seatml > sample.grxml
+'''
+
 def main():
     sys.stdout = codecs.getwriter('utf_8')(sys.stdout)
 
-    parser = optparse.OptionParser(version=__version__, usage="%prog [seatmlfile]")
+    class MyParser(optparse.OptionParser):
+        def format_epilog(self, formatter):
+            return self.epilog
+
+    parser = MyParser(version=__version__, usage="%prog [seatmlfile]",
+                      description=__doc__, epilog=__examples__)
     parser.add_option('-v', '--verbose', dest='verbose', action='store_true',
                       default=False,
                       help='output verbose information')

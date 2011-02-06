@@ -32,6 +32,8 @@ from BeautifulSoup import BeautifulSoup
 from __init__ import __version__
 import utils
 
+__doc__ = 'Simple dialog manager component.'
+
 class SocketAdaptor(threading.Thread):
     def __init__(self, seat, name, host, port):
         threading.Thread.__init__(self)
@@ -464,7 +466,8 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
 
 class SEATManager:
     def __init__(self):
-        parser = optparse.OptionParser(version=__version__, usage="%prog [seatmlfile]")
+        parser = optparse.OptionParser(version=__version__, usage="%prog [seatmlfile]",
+                                       description=__doc__)
         utils.addmanageropts(parser)
         parser.add_option('-g', '--gui', dest='guimode', action="store_true",
                           default=False,

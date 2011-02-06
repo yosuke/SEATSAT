@@ -30,6 +30,8 @@ from Python_sml_ClientInterface import *
 from __init__ import __version__
 import utils
 
+__doc__ = 'Soar general artificial intelligence component.'
+
 class SoarWrap(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
@@ -144,7 +146,7 @@ class SoarRTC(XableRTC):
 
 class SoarRTCManager:
     def __init__(self):
-        parser = optparse.OptionParser(version=__version__)
+        parser = optparse.OptionParser(version=__version__, description=__doc__)
         utils.addmanageropts(parser)
         try:
             opts, args = parser.parse_args()
