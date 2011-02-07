@@ -19,13 +19,18 @@ import codecs
 import optparse
 from __init__ import __version__
 from xml.dom.minidom import parse
+try:
+    import gettext
+    _ = gettext.translation(domain='seatsat', localedir=os.path.dirname(__file__)+'/../share/locale').ugettext
+except:
+    _ = lambda s: s
 
-__doc__ = 'Generate W3C-SRGS grammar from the SEAT script file.'
+__doc__ = _('Generate W3C-SRGS grammar from the SEAT script file.')
 
 __examples__ = '''
 Examples:
 
-- Generate SRGS grammar from the SEAT script file.
+- '''+_('Generate SRGS grammar from the SEAT script file.')+'''
 
   ::
   
@@ -33,8 +38,6 @@ Examples:
 '''
 
 def main():
-    sys.stdout = codecs.getwriter('utf_8')(sys.stdout)
-
     class MyParser(optparse.OptionParser):
         def format_epilog(self, formatter):
             return self.epilog
@@ -43,7 +46,7 @@ def main():
                       description=__doc__, epilog=__examples__)
     parser.add_option('-v', '--verbose', dest='verbose', action='store_true',
                       default=False,
-                      help='output verbose information')
+                      help=_('output verbose information'))
     try:
         opts, args = parser.parse_args()
     except optparse.OptionError, e:
@@ -53,6 +56,8 @@ def main():
     if len(args) == 0:
         parser.error("wrong number of arguments")
         sys.exit(1)
+
+    sys.stdout = codecs.getwriter('utf_8')(sys.stdout)
 
     print '''\
 <?xml version="1.0" encoding="UTF-8" ?>

@@ -22,13 +22,18 @@ import optparse
 from __init__ import __version__
 from lxml import etree
 import utils
+try:
+    import gettext
+    _ = gettext.translation(domain='seatsat', localedir=os.path.dirname(__file__)+'/../share/locale').ugettext
+except:
+    _ = lambda s: s
 
-__doc__ = 'Validate format of the SEAT script file.'
+__doc__ = _('Validate format of the SEAT script file.')
 
 __examples__ = '''
 Examples:
 
-- Validate format of the SEAT script file.
+- '''+_('Validate format of the SEAT script file.')+'''
 
   ::
   
@@ -38,13 +43,6 @@ Examples:
 def main():
     global opts
     
-    locale.setlocale(locale.LC_CTYPE, "")
-    encoding = locale.getlocale()[1]
-    if not encoding:
-        encoding = "us-ascii"
-    sys.stdout = codecs.getwriter(encoding)(sys.stdout, errors = "replace")
-    sys.stderr = codecs.getwriter(encoding)(sys.stderr, errors = "replace")
-
     if hasattr(sys, "frozen"):
         basedir = os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding()))
     else:
@@ -58,10 +56,10 @@ def main():
                       description=__doc__, epilog=__examples__)
     parser.add_option('-v', '--verbose', dest='verbose', action='store_true',
                       default=False,
-                      help='output verbose information')
+                      help=_('output verbose information'))
     parser.add_option('-g', '--gui', dest='guimode', action="store_true",
                       default=False,
-                      help='show file open dialog in GUI')
+                      help=_('show file open dialog in GUI'))
     try:
         opts, args = parser.parse_args()
     except optparse.OptionError, e:
@@ -74,6 +72,8 @@ def main():
     if len(args) == 0:
         parser.error("wrong number of arguments")
         sys.exit(1)
+
+    sys.stdout = codecs.getwriter('utf_8')(sys.stdout, errors = "replace")
 
     parser = etree.XMLParser(dtd_validation = True)
     xmlschema_doc = etree.parse(os.path.join(basedir, 'seatml.xsd'))

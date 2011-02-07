@@ -16,6 +16,11 @@ http://www.opensource.org/licenses/eclipse-1.0.txt
 import sys
 import os
 import platform
+try:
+    import fintl
+    _ = fintl.gettext
+except ImportError:
+    _ = lambda s: s
 
 def askopenfilename(title=''):
     if platform.system() == 'Windows':
@@ -57,19 +62,19 @@ def askopenfilenames(title=''):
 def addmanageropts(parser):
     parser.add_option('-a', '--manager-service', dest='managerservice', action='store_true',
                       default=False,
-                      help='enable manager to be controlled as corba servant')
+                      help=_('enable manager to be controlled as corba servant'))
     parser.add_option('-f', '--config-file', dest='configfile', action='store',
                       default=None,
-                      help='specify custom configuration file')
+                      help=_('specify custom configuration file'))
     parser.add_option('-o', '--option', dest='option', action='append',
                       default=None,
-                      help='specify custom configuration parameter')
+                      help=_('specify custom configuration parameter'))
     parser.add_option('-p', '--port', dest='port', action='store',
                       default=None,
-                      help='specify custom corba endpoint')
+                      help=_('specify custom corba endpoint'))
     parser.add_option('-d', '--master-mode', dest='mastermode', action='store_true',
                       default=False,
-                      help='configure manager to be master')
+                      help=_('configure manager to be master'))
 
 def genmanagerargs(opt):
     args = [sys.argv[0],]

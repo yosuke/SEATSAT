@@ -29,8 +29,13 @@ from XableRTC import *
 from Python_sml_ClientInterface import *
 from __init__ import __version__
 import utils
+try:
+    import fintl
+    _ = fintl.ugettext
+except ImportError:
+    _ = lambda s: s
 
-__doc__ = 'Soar general artificial intelligence component.'
+__doc__ = _('Soar general artificial intelligence component.')
 
 class SoarWrap(threading.Thread):
     def __init__(self):
@@ -57,7 +62,7 @@ class SoarWrap(threading.Thread):
 
 SoarRTC_spec = ["implementation_id", "SoarRTC",
                 "type_name",         "SoarRTC",
-                "description",       "Soar general artificial intelligence component (python implementation)",
+                "description",       __doc__,
                 "version",           __version__,
                 "vendor",            "AIST",
                 "category",          "communication",

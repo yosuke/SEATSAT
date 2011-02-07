@@ -1,0 +1,92 @@
+# Japanese translations for PACKAGE package.
+# Copyright (C) 2011 ORGANIZATION
+# matsusaka <yosuke.matsusaka@aist.go.jp>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-02-07 17:14+0900\n"
+"PO-Revision-Date: 2011-02-07 16:23+0900\n"
+"Last-Translator: matsusaka <yosuke.matsusaka@aist.go.jp>\n"
+"Language-Team: Japanese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: ../seatsat/SEAT.py:40
+msgid ""
+"SEAT(Speech Event Action Transfer) is a simple dialog manager for robotic "
+"applications.\n"
+"The interactive behavior of the system can be realized without complex "
+"programming.\n"
+"\n"
+"SEAT has following features:\n"
+" 1. Paraphrase matching function.\n"
+" 2. Conversation management function based on state transition model.\n"
+" 3. Adapter functions (supports OpenRTM , BSD socket, etc...).\n"
+msgstr ""
+"SEAT(Speech Event Action Transfer)はロボットアプリケーションのためのシンプル"
+"な対話マネージャです。\n"
+"システムのインタラクティブな挙動を複雑なプログラミングなしで実現することがで"
+"きます。\n"
+"\n"
+"SEATには以下の機能があります:\n"
+" 1. パラフレーズマッチング機能\n"
+" 2. 状態遷移モデルを用いた対話管理機能\n"
+" 3. アダプタ機能(OpenRTM, BSD socketなどとの接続ができます).\n"
+
+#: ../seatsat/SEAT.py:487 ../seatsat/validateseatml.py:69
+msgid "show file open dialog in GUI"
+msgstr "ファイルを開くダイアログをGUIで表示する"
+
+#: ../seatsat/SoarRTC.py:38
+msgid "Soar general artificial intelligence component."
+msgstr "プロダクションシステムエンジンSoarを用いた汎用人工知能コンポーネント"
+
+#: ../seatsat/seatmltographviz.py:28
+msgid "Draw graph from SEAT script file."
+msgstr "SEATスクリプトファイルからグラフを生成する"
+
+#: ../seatsat/seatmltographviz.py:33
+msgid "Draw graph of the SEAT script file."
+msgstr "SEATスクリプトファイルのグラフを生成する"
+
+#: ../seatsat/seatmltographviz.py:50 ../seatsat/seatmltosrgs.py:51
+#: ../seatsat/validateseatml.py:66
+msgid "output verbose information"
+msgstr "デバッグ情報を表示する"
+
+#: ../seatsat/seatmltosrgs.py:28
+msgid "Generate W3C-SRGS grammar from the SEAT script file."
+msgstr "SEATスクリプトファイルからW3C-SRGS形式の文法ファイルを生成する"
+
+#: ../seatsat/seatmltosrgs.py:33
+msgid "Generate SRGS grammar from the SEAT script file."
+msgstr "SEATスクリプトファイルからSRGS形式の文法ファイルを生成する"
+
+#: ../seatsat/utils.py:65
+msgid "enable manager to be controlled as corba servant"
+msgstr "マネージャをcorbaサーバンドとして起動する"
+
+#: ../seatsat/utils.py:68
+msgid "specify custom configuration file"
+msgstr "カスタム設定ファイルを指定する"
+
+#: ../seatsat/utils.py:71
+msgid "specify custom configuration parameter"
+msgstr "カスタムコンフィギュレーションパラメータを指定する"
+
+#: ../seatsat/utils.py:74
+msgid "specify custom corba endpoint"
+msgstr "corbaエンドポイントを指定する"
+
+#: ../seatsat/utils.py:77
+msgid "configure manager to be master"
+msgstr "マネージャをマスターとして起動する"
+
+#: ../seatsat/validateseatml.py:31 ../seatsat/validateseatml.py:36
+msgid "Validate format of the SEAT script file."
+msgstr "SEATスクリプトファイルの文法間違いをチェックする"

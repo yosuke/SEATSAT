@@ -13,16 +13,23 @@ http://www.opensource.org/licenses/eclipse-1.0.txt
 '''
 
 from setuptools import setup, find_packages
+from setuptools.command.build_ext import build_ext
 import sys, os
 from seatsat.XableRTC import *
+from seatsat.__init__ import __version__
 
-version = '1.02'
+cmd_classes = {}
+try:
+    from DistUtilsExtra.command import *
+    cmd_classes.update({"build": build_extra.build_extra,
+                        "build_i18n" :  build_i18n.build_i18n})
+except ImportError:
+    pass
 
 try:
     import py2exe
 except ImportError:
     pass
-
 
 if sys.platform == "win32":
     # py2exe options
@@ -45,29 +52,30 @@ else:
     extra = {}
 
 setup(name='seatsat',
-    version=version,
-    description="Simple dialogue manager component for OpenRTM (part of OpenHRI softwares)",
-    long_description="""Simple dialogue manager component for OpenRTM (part of OpenHRI softwares).""",
-    classifiers=[],
-    keywords='',
-    author='Yosuke Matsusaka',
-    author_email='yosuke.matsusaka@aist.go.jp',
-    url='http://openhri.net/',
-    license='EPL',
-    packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-    include_package_data=True,
-    package_data={'seatsat': ['*.xsd']},
-    zip_safe=False,
-    install_requires=[
+      cmdclass=cmd_classes,
+      version=__version__,
+      description="Simple dialogue manager component for OpenRTM (part of OpenHRI softwares)",
+      long_description="""Simple dialogue manager component for OpenRTM (part of OpenHRI softwares).""",
+      classifiers=[],
+      keywords='',
+      author='Yosuke Matsusaka',
+      author_email='yosuke.matsusaka@aist.go.jp',
+      url='http://openhri.net/',
+      license='EPL',
+      packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+      include_package_data=True,
+      package_data={'seatsat': ['*.xsd',]},
+      zip_safe=False,
+      install_requires=[
         # -*- Extra requirements: -*-
         ],
-    entry_points="""
-    [console_scripts]
-    seat = seatsat.SEAT:main
-    validateseatml = seatsat.validateseatml:main
-    seatmltographviz = seatsat.seatmltographviz:main
-    seatmltosrgs = seatsat.seatmltosrgs:main
-    soarrtc = seatsat.SoarRTC:main
-    """,
-    **extra
-    )
+      entry_points="""
+      [console_scripts]
+      seat = seatsat.SEAT:main
+      validateseatml = seatsat.validateseatml:main
+      seatmltographviz = seatsat.seatmltographviz:main
+      seatmltosrgs = seatsat.seatmltosrgs:main
+      soarrtc = seatsat.SoarRTC:main
+      """,
+      **extra
+      )

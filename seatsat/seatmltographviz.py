@@ -19,13 +19,18 @@ import codecs
 import optparse
 from __init__ import __version__
 from xml.dom.minidom import parse
+try:
+    import fintl
+    _ = fintl.ugettext
+except ImportError:
+    _ = lambda s: s
 
-__doc__ = 'Draw graph from SEAT script file.'
+__doc__ = _('Draw graph from SEAT script file.')
 
 __examples__ = '''
 Examples:
 
-- Draw graph of the SEAT script file.
+- '''+_('Draw graph of the SEAT script file.')+'''
 
   ::
   
@@ -42,7 +47,7 @@ def main():
                       description=__doc__, epilog=__examples__)
     parser.add_option('-v', '--verbose', dest='verbose', action='store_true',
                       default=False,
-                      help='output verbose information')
+                      help=_('output verbose information'))
     try:
         opts, args = parser.parse_args()
     except optparse.OptionError, e:

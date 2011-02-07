@@ -1,0 +1,83 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-02-07 18:07+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../seatsat/SEAT.py:40
+msgid ""
+"SEAT(Speech Event Action Transfer) is a simple dialog manager for robotic "
+"applications.\n"
+"The interactive behavior of the system can be realized without complex "
+"programming.\n"
+"\n"
+"SEAT has following features:\n"
+" 1. Paraphrase matching function.\n"
+" 2. Conversation management function based on state transition model.\n"
+" 3. Adapter functions (supports OpenRTM , BSD socket, etc...).\n"
+msgstr ""
+
+#: ../seatsat/SEAT.py:487 ../seatsat/validateseatml.py:62
+msgid "show file open dialog in GUI"
+msgstr ""
+
+#: ../seatsat/SoarRTC.py:38
+msgid "Soar general artificial intelligence component."
+msgstr ""
+
+#: ../seatsat/seatmltographviz.py:28
+msgid "Draw graph from SEAT script file."
+msgstr ""
+
+#: ../seatsat/seatmltographviz.py:33
+msgid "Draw graph of the SEAT script file."
+msgstr ""
+
+#: ../seatsat/seatmltographviz.py:50 ../seatsat/seatmltosrgs.py:49
+#: ../seatsat/validateseatml.py:59
+msgid "output verbose information"
+msgstr ""
+
+#: ../seatsat/seatmltosrgs.py:28
+msgid "Generate W3C-SRGS grammar from the SEAT script file."
+msgstr ""
+
+#: ../seatsat/seatmltosrgs.py:33
+msgid "Generate SRGS grammar from the SEAT script file."
+msgstr ""
+
+#: ../seatsat/utils.py:65
+msgid "enable manager to be controlled as corba servant"
+msgstr ""
+
+#: ../seatsat/utils.py:68
+msgid "specify custom configuration file"
+msgstr ""
+
+#: ../seatsat/utils.py:71
+msgid "specify custom configuration parameter"
+msgstr ""
+
+#: ../seatsat/utils.py:74
+msgid "specify custom corba endpoint"
+msgstr ""
+
+#: ../seatsat/utils.py:77
+msgid "configure manager to be master"
+msgstr ""
+
+#: ../seatsat/validateseatml.py:31 ../seatsat/validateseatml.py:36
+msgid "Validate format of the SEAT script file."
+msgstr ""
