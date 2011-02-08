@@ -37,7 +37,7 @@ try:
 except:
     _ = lambda s: s
 
-__doc__ = '''\
+__doc__ = _('''\
 SEAT(Speech Event Action Transfer) is a simple dialog manager for robotic applications.
 The interactive behavior of the system can be realized without complex programming.
 
@@ -45,7 +45,7 @@ SEAT has following features:
  1. Paraphrase matching function.
  2. Conversation management function based on state transition model.
  3. Adapter functions (supports OpenRTM , BSD socket, etc...).
-'''
+''')
 
 class SocketAdaptor(threading.Thread):
     def __init__(self, seat, name, host, port):
@@ -110,7 +110,7 @@ class SocketAdaptor(threading.Thread):
 
 seat_spec = ["implementation_id", "SEAT",
              "type_name",         "SEAT",
-             "description",       __doc__,
+             "description",       __doc__.encode('UTF-8'),
              "version",           __version__,
              "vendor",            "Yosuke Matsusaka and Isao Hara, AIST",
              "category",          "Speech",

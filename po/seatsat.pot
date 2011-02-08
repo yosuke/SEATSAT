@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-08 12:04+0900\n"
+"POT-Creation-Date: 2011-02-08 22:59+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,8 +16,25 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ../seatsat/SEAT.py:40
+msgid ""
+"SEAT(Speech Event Action Transfer) is a simple dialog manager for robotic "
+"applications.\n"
+"The interactive behavior of the system can be realized without complex "
+"programming.\n"
+"\n"
+"SEAT has following features:\n"
+" 1. Paraphrase matching function.\n"
+" 2. Conversation management function based on state transition model.\n"
+" 3. Adapter functions (supports OpenRTM , BSD socket, etc...).\n"
+msgstr ""
+
 #: ../seatsat/SEAT.py:491 ../seatsat/validateseatml.py:62
 msgid "show file open dialog in GUI"
+msgstr ""
+
+#: ../seatsat/SoarRTC.py:38
+msgid "Soar general artificial intelligence component."
 msgstr ""
 
 #: ../seatsat/seatmltographviz.py:30

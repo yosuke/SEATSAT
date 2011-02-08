@@ -1,12 +1,12 @@
 SEAT0.rtc
 =========
-SEAT(Speech Event Action Transfer) is a simple dialog manager for robotic applications.
-The interactive behavior of the system can be realized without complex programming.
+SEAT(Speech Event Action Transfer)はロボットアプリケーションのためのシンプルな対話マネージャです。
+システムのインタラクティブな挙動を複雑なプログラミングなしで実現することができます。
 
-SEAT has following features:
- 1. Paraphrase matching function.
- 2. Conversation management function based on state transition model.
- 3. Adapter functions (supports OpenRTM , BSD socket, etc...).
+SEATには以下の機能があります:
+ 1. パラフレーズマッチング機能
+ 2. 状態遷移モデルを用いた対話管理機能
+ 3. アダプタ機能(OpenRTM, BSD socketなどとの接続ができます).
 
 :Vendor: Yosuke Matsusaka and Isao Hara, AIST
 :Version: 1.03

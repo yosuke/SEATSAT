@@ -1,6 +1,6 @@
 SoarRTC0.rtc
 ============
-Soar general artificial intelligence component.
+プロダクションシステムエンジンSoarを用いた汎用人工知能コンポーネント
 
 :Vendor: AIST
 :Version: 1.03

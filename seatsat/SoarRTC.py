@@ -35,7 +35,7 @@ try:
 except:
     _ = lambda s: s
 
-__doc__ = 'Soar general artificial intelligence component.'
+__doc__ = _('Soar general artificial intelligence component.')
 
 class SoarWrap(threading.Thread):
     def __init__(self):
@@ -62,7 +62,7 @@ class SoarWrap(threading.Thread):
 
 SoarRTC_spec = ["implementation_id", "SoarRTC",
                 "type_name",         "SoarRTC",
-                "description",       __doc__,
+                "description",       __doc__.encode('UTF-8'),
                 "version",           __version__,
                 "vendor",            "AIST",
                 "category",          "communication",
