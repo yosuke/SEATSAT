@@ -17,12 +17,14 @@ import sys
 import os
 import codecs
 import optparse
+import locale
 from __init__ import __version__
 from xml.dom.minidom import parse
+import utils
 try:
-    import fintl
-    _ = fintl.ugettext
-except ImportError:
+    import gettext
+    _ = gettext.translation(domain='seatsat', localedir=os.path.dirname(__file__)+'/../share/locale').ugettext
+except:
     _ = lambda s: s
 
 __doc__ = _('Draw graph from SEAT script file.')
@@ -37,14 +39,12 @@ Examples:
   $ seatmltographviz sample.seatml | dot -Txlib
 '''
 def main():
-    sys.stdout = codecs.getwriter('utf_8')(sys.stdout)
-    
-    class MyParser(optparse.OptionParser):
-        def format_epilog(self, formatter):
-            return self.epilog
+    encoding = locale.getpreferredencoding()
+    sys.stdout = codecs.getwriter(encoding)(sys.stdout, errors = "replace")
+    sys.stderr = codecs.getwriter(encoding)(sys.stderr, errors = "replace")
 
-    parser = MyParser(version=__version__, usage="%prog [seatmlfile]",
-                      description=__doc__, epilog=__examples__)
+    parser = utils.MyParser(version=__version__, usage="%prog [seatmlfile]",
+                            description=__doc__, epilog=__examples__)
     parser.add_option('-v', '--verbose', dest='verbose', action='store_true',
                       default=False,
                       help=_('output verbose information'))

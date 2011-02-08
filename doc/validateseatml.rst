@@ -15,3 +15,4 @@ Examples:
   ::
   
   $ validateseatml sample.seatml
+

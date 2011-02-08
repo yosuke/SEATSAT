@@ -30,12 +30,12 @@ from Python_sml_ClientInterface import *
 from __init__ import __version__
 import utils
 try:
-    import fintl
-    _ = fintl.ugettext
-except ImportError:
+    import gettext
+    _ = gettext.translation(domain='seatsat', localedir=os.path.dirname(__file__)+'/../share/locale').ugettext
+except:
     _ = lambda s: s
 
-__doc__ = _('Soar general artificial intelligence component.')
+__doc__ = 'Soar general artificial intelligence component.'
 
 class SoarWrap(threading.Thread):
     def __init__(self):
@@ -151,7 +151,11 @@ class SoarRTC(XableRTC):
 
 class SoarRTCManager:
     def __init__(self):
-        parser = optparse.OptionParser(version=__version__, description=__doc__)
+        encoding = locale.getpreferredencoding()
+        sys.stdout = codecs.getwriter(encoding)(sys.stdout, errors = "replace")
+        sys.stderr = codecs.getwriter(encoding)(sys.stderr, errors = "replace")
+
+        parser = utils.MyParser(version=__version__, description=__doc__)
         utils.addmanageropts(parser)
         try:
             opts, args = parser.parse_args()
@@ -173,12 +177,6 @@ class SoarRTCManager:
         self._comp = manager.createComponent("SoarRTC?exec_cxt.periodic.rate=1")
 
 def main():
-    locale.setlocale(locale.LC_CTYPE, "")
-    encoding = locale.getlocale()[1]
-    if not encoding:
-        encoding = "us-ascii"
-    sys.stdout = codecs.getwriter(encoding)(sys.stdout, errors = "replace")
-    sys.stderr = codecs.getwriter(encoding)(sys.stderr, errors = "replace")
     manager = SoarRTCManager()
     manager.start()
 

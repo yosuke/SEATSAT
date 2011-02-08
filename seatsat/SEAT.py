@@ -32,12 +32,12 @@ from BeautifulSoup import BeautifulSoup
 from __init__ import __version__
 import utils
 try:
-    import fintl
-    _ = fintl.ugettext
-except ImportError:
+    import gettext
+    _ = gettext.translation(domain='seatsat', localedir=os.path.dirname(__file__)+'/../share/locale').ugettext
+except:
     _ = lambda s: s
 
-__doc__ = _('''\
+__doc__ = '''\
 SEAT(Speech Event Action Transfer) is a simple dialog manager for robotic applications.
 The interactive behavior of the system can be realized without complex programming.
 
@@ -45,7 +45,7 @@ SEAT has following features:
  1. Paraphrase matching function.
  2. Conversation management function based on state transition model.
  3. Adapter functions (supports OpenRTM , BSD socket, etc...).
-''')
+'''
 
 class SocketAdaptor(threading.Thread):
     def __init__(self, seat, name, host, port):
@@ -479,8 +479,12 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
 
 class SEATManager:
     def __init__(self):
-        parser = optparse.OptionParser(version=__version__, usage="%prog [seatmlfile]",
-                                       description=__doc__)
+        encoding = locale.getpreferredencoding()
+        sys.stdout = codecs.getwriter(encoding)(sys.stdout, errors = "replace")
+        sys.stderr = codecs.getwriter(encoding)(sys.stderr, errors = "replace")
+        
+        parser = utils.MyParser(version=__version__, usage="%prog [seatmlfile]",
+                                description=__doc__)
         utils.addmanageropts(parser)
         parser.add_option('-g', '--gui', dest='guimode', action="store_true",
                           default=False,
@@ -518,13 +522,6 @@ class SEATManager:
             print >>sys.stderr, 'unable to load script file: see log file for details...'
 
 def main():
-    locale.setlocale(locale.LC_CTYPE, "")
-    encoding = locale.getlocale()[1]
-    if not encoding:
-        encoding = "us-ascii"
-    sys.stdout = codecs.getwriter(encoding)(sys.stdout, errors = "replace")
-    sys.stderr = codecs.getwriter(encoding)(sys.stderr, errors = "replace")
-
     seat = SEATManager()
     seat.start()
 

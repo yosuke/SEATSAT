@@ -43,16 +43,16 @@ Examples:
 def main():
     global opts
     
+    encoding = locale.getpreferredencoding()
+    sys.stdout = codecs.getwriter(encoding)(sys.stdout, errors = "replace")
+    sys.stderr = codecs.getwriter(encoding)(sys.stderr, errors = "replace")
+
     if hasattr(sys, "frozen"):
         basedir = os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding()))
     else:
         basedir = os.path.dirname(__file__)
 
-    class MyParser(optparse.OptionParser):
-        def format_epilog(self, formatter):
-            return self.epilog
-
-    parser = MyParser(version=__version__, usage="%prog [seatmlfile]",
+    parser = utils.MyParser(version=__version__, usage="%prog [seatmlfile]",
                       description=__doc__, epilog=__examples__)
     parser.add_option('-v', '--verbose', dest='verbose', action='store_true',
                       default=False,
@@ -72,8 +72,6 @@ def main():
     if len(args) == 0:
         parser.error("wrong number of arguments")
         sys.exit(1)
-
-    sys.stdout = codecs.getwriter('utf_8')(sys.stdout, errors = "replace")
 
     parser = etree.XMLParser(dtd_validation = True)
     xmlschema_doc = etree.parse(os.path.join(basedir, 'seatml.xsd'))
