@@ -3,23 +3,23 @@
 rtexit /localhost/`hostname`.host_cxt/SEAT0.rtc
 LANG=C seat ../examples/sample.seatml &
 sleep 2
-rtdoc --format=rst /localhost/`hostname`.host_cxt/SEAT0.rtc > seat.rst
+rtdoc --format=rst --graph /localhost/`hostname`.host_cxt/SEAT0.rtc > seat.rst
 rtexit /localhost/`hostname`.host_cxt/SEAT0.rtc
 sleep 1
 LANG=ja_JP.UTF-8 seat ../examples/sample.seatml &
 sleep 2
-rtdoc --format=rst /localhost/`hostname`.host_cxt/SEAT0.rtc > seat-ja.rst
+rtdoc --format=rst --graph /localhost/`hostname`.host_cxt/SEAT0.rtc > seat-ja.rst
 rtexit /localhost/`hostname`.host_cxt/SEAT0.rtc
 
 rtexit /localhost/`hostname`.host_cxt/SoarRTC0.rtc
 LANG=C soarrtc &
 sleep 2
-rtdoc --format=rst /localhost/`hostname`.host_cxt/SoarRTC0.rtc > soarrtc.rst
+rtdoc --format=rst --graph /localhost/`hostname`.host_cxt/SoarRTC0.rtc > soarrtc.rst
 rtexit /localhost/`hostname`.host_cxt/SoarRTC0.rtc
 sleep 1
 LANG=ja_JP.UTF-8 soarrtc &
 sleep 2
-rtdoc --format=rst /localhost/`hostname`.host_cxt/SoarRTC0.rtc > soarrtc-ja.rst
+rtdoc --format=rst --graph /localhost/`hostname`.host_cxt/SoarRTC0.rtc > soarrtc-ja.rst
 rtexit /localhost/`hostname`.host_cxt/SoarRTC0.rtc
 
 LANG=C validateseatml --help > validateseatml.rst

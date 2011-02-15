@@ -1,5 +1,5 @@
-SEAT0.rtc
-=========
+SEAT
+====
 SEAT(Speech Event Action Transfer)はロボットアプリケーションのためのシンプルな対話マネージャです。
 システムのインタラクティブな挙動を複雑なプログラミングなしで実現することができます。
 
@@ -21,9 +21,18 @@ Ports
    "speechin", "DataInPort", "TimedString", ""
    "speechout", "DataOutPort", "TimedString", ""
 
+.. digraph:: comp
+
+   rankdir=LR;
+   SEAT [shape=Mrecord, label="SEAT"];
+   speechin [shape=plaintext, label="speechin"];
+   speechin -> SEAT;
+   speechout [shape=plaintext, label="speechout"];
+   SEAT -> speechout;
+
 Configuration parameters
 ------------------------
-.. csv-table:: Configration parameters
+.. csv-table:: Configuration parameters
    :header: "Name", "Description"
    :widths: 12, 38
    
