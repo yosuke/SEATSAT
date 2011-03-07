@@ -51,7 +51,8 @@ class MyParser(optparse.OptionParser):
         file.write(self.get_version() + '\n')
 
 def askopenfilename(title=''):
-    if platform.system() == 'Windows':
+    #if platform.system() == 'Windows':
+    if 0:
         import win32ui
         import win32con 
         openFlags = win32con.OFN_FILEMUSTEXIST|win32con.OFN_EXPLORER
@@ -68,13 +69,14 @@ def askopenfilename(title=''):
     return None
 
 def askopenfilenames(title=''):
-    if platform.system() == 'Windows':
+    #if platform.system() == 'Windows':
+    if 0:
         import win32ui
         import win32con 
         openFlags = win32con.OFN_FILEMUSTEXIST|win32con.OFN_EXPLORER|win32con.OFN_ALLOWMULTISELECT
         fspec = "all|*.*||"
         dlg = win32ui.CreateFileDialog(1, None, None, openFlags, fspec) 
-        if dlg.DoModal() == win32con.IDOK: 
+        if dlg.DoModal() == win32con.IDOK:
             return dlg.GetPathNames()
     else:
         import Tkinter
@@ -83,7 +85,7 @@ def askopenfilenames(title=''):
         rt.withdraw()
         sel = tkFileDialog.askopenfilenames(title=title)
         if isinstance(sel, unicode):
-            sel = root.tk.splitlist(sel)
+            sel = rt.tk.splitlist(sel)
         return sel
     return None
 
