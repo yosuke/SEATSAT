@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-08 22:59+0900\n"
+"POT-Creation-Date: 2011-03-07 14:27+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgid ""
 " 3. Adapter functions (supports OpenRTM , BSD socket, etc...).\n"
 msgstr ""
 
-#: ../seatsat/SEAT.py:491 ../seatsat/validateseatml.py:62
+#: ../seatsat/SEAT.py:492 ../seatsat/validateseatml.py:62
 msgid "show file open dialog in GUI"
 msgstr ""
 
@@ -58,23 +58,31 @@ msgstr ""
 msgid "Generate SRGS grammar from the SEAT script file."
 msgstr ""
 
-#: ../seatsat/utils.py:93
-msgid "enable manager to be controlled as corba servant"
+#: ../seatsat/utils.py:30
+msgid "show this help message and exit"
 msgstr ""
 
-#: ../seatsat/utils.py:96
-msgid "specify custom configuration file"
-msgstr ""
-
-#: ../seatsat/utils.py:99
-msgid "specify custom configuration parameter"
-msgstr ""
-
-#: ../seatsat/utils.py:102
-msgid "specify custom corba endpoint"
+#: ../seatsat/utils.py:35
+msgid "show program's version number and exit"
 msgstr ""
 
 #: ../seatsat/utils.py:105
+msgid "enable manager to be controlled as corba servant"
+msgstr ""
+
+#: ../seatsat/utils.py:108
+msgid "specify custom configuration file"
+msgstr ""
+
+#: ../seatsat/utils.py:111
+msgid "specify custom configuration parameter"
+msgstr ""
+
+#: ../seatsat/utils.py:114
+msgid "specify custom corba endpoint"
+msgstr ""
+
+#: ../seatsat/utils.py:117
 msgid "configure manager to be master"
 msgstr ""
 
