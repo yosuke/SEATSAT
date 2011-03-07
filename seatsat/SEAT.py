@@ -29,8 +29,8 @@ import OpenRTM_aist
 import RTC
 from lxml import etree
 from BeautifulSoup import BeautifulSoup
-from __init__ import __version__
-import utils
+from seatsat.__init__ import __version__
+from seatsat import utils
 try:
     import gettext
     _ = gettext.translation(domain='seatsat', localedir=os.path.dirname(__file__)+'/../share/locale').ugettext
@@ -479,6 +479,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
 
 class SEATManager:
     def __init__(self):
+        global opts
         encoding = locale.getpreferredencoding()
         sys.stdout = codecs.getwriter(encoding)(sys.stdout, errors = "replace")
         sys.stderr = codecs.getwriter(encoding)(sys.stderr, errors = "replace")
@@ -511,7 +512,10 @@ class SEATManager:
         self.manager.activateManager()
 
     def start(self):
+        global opts
         self.manager.runManager(False)
+        #if opts.guimode == True:
+        #    raw_input("Press Enter to Exit")
 
     def moduleInit(self, manager):
         profile = OpenRTM_aist.Properties(defaults_str=seat_spec)
@@ -519,12 +523,13 @@ class SEATManager:
         self.comp = manager.createComponent("SEAT?exec_cxt.periodic.rate=1")
         ret = self.comp.loadSEATML(self._scriptfiles)
         if ret != 0:
-            print >>sys.stderr, 'unable to load script file: see log file for details...'
+            print >>sys.stderr, 'Unable to load script file: see log file for details...'
 
 def main():
     seat = SEATManager()
     seat.start()
+    return 0
 
 if __name__=='__main__':
-    main()
+    sys.exit(main())
 

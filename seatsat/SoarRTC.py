@@ -25,10 +25,10 @@ import optparse
 from pprint import pformat
 import OpenRTM_aist
 import RTC
-from XableRTC import *
+from seatsat.XableRTC import *
 from Python_sml_ClientInterface import *
-from __init__ import __version__
-import utils
+from seatsat.__init__ import __version__
+from seatsat import utils
 try:
     import gettext
     _ = gettext.translation(domain='seatsat', localedir=os.path.dirname(__file__)+'/../share/locale').ugettext
@@ -75,9 +75,6 @@ SoarRTC_spec = ["implementation_id", "SoarRTC",
 class SoarRTC(XableRTC):
     def __init__(self, manager):
         XableRTC.__init__(self, manager)
-        self._logger = OpenRTM_aist.Manager.instance().getLogbuf("SoarRTC")
-        self._logger.RTC_INFO("SoarRTC version " + __version__)
-        self._logger.RTC_INFO("Copyright (C) 2010 Yosuke Matsusaka")
         self._soar = None
         self._datawme = {}
         self._timewme = {}
@@ -85,6 +82,9 @@ class SoarRTC(XableRTC):
     def onInitialize(self):
         OpenRTM_aist.DataFlowComponentBase.onInitialize(self)
         XableRTC.onInitialize(self)
+        self._logger = OpenRTM_aist.Manager.instance().getLogbuf(self.getInstanceName())
+        self._logger.RTC_INFO("SoarRTC version " + __version__)
+        self._logger.RTC_INFO("Copyright (C) 2010 Yosuke Matsusaka")
         # create outport for command
         self._commanddata = RTC.TimedString(RTC.Time(0,0), "")
         self._commandport = OpenRTM_aist.OutPort("command", self._commanddata)

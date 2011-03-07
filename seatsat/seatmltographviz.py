@@ -18,9 +18,9 @@ import os
 import codecs
 import optparse
 import locale
-from __init__ import __version__
+from seatsat.__init__ import __version__
 from xml.dom.minidom import parse
-import utils
+from seatsat import utils
 try:
     import gettext
     _ = gettext.translation(domain='seatsat', localedir=os.path.dirname(__file__)+'/../share/locale').ugettext

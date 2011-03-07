@@ -15,7 +15,6 @@ http://www.opensource.org/licenses/eclipse-1.0.txt
 from setuptools import setup, find_packages
 from setuptools.command.build_ext import build_ext
 import sys, os
-from seatsat.XableRTC import *
 from seatsat.__init__ import __version__
 
 cmd_classes = {}
@@ -43,7 +42,7 @@ if sys.platform == "win32":
                     ],
         "options": {
             "py2exe": {
-                "includes": "xml.etree.ElementTree, lxml._elementpath, OpenRTM_aist, RTC, gzip, seatsat.XableRTC",
+                "includes": "xml.etree.ElementTree, lxml._elementpath, BeautifulSoup, OpenRTM_aist, RTC, gzip",
                 "dll_excludes": ["MSVCP90.dll", "ierutil.dll", "powrprof.dll", "msimg32.dll", "mpr.dll", "urlmon.dll", "dnsapi.dll"],
             }
         }

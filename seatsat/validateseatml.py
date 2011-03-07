@@ -19,9 +19,9 @@ import getopt
 import codecs
 import locale
 import optparse
-from __init__ import __version__
+from seatsat.__init__ import __version__
 from lxml import etree
-import utils
+from seatsat import utils
 try:
     import gettext
     _ = gettext.translation(domain='seatsat', localedir=os.path.dirname(__file__)+'/../share/locale').ugettext

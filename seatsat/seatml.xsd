@@ -37,7 +37,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="1" maxOccurs="unbounded" ref="key"/>
-        <xs:element minOccurs="1" maxOccurs="unbounded" ref="command"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="command"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="statetransition"/>
       </xs:sequence>
     </xs:complexType>
