@@ -82,7 +82,7 @@ class SoarRTC(XableRTC):
     def onInitialize(self):
         OpenRTM_aist.DataFlowComponentBase.onInitialize(self)
         XableRTC.onInitialize(self)
-        self._logger = OpenRTM_aist.Manager.instance().getLogbuf(self.getInstanceName())
+        self._logger = OpenRTM_aist.Manager.instance().getLogbuf(self._properties.getProperty("instance_name"))
         self._logger.RTC_INFO("SoarRTC version " + __version__)
         self._logger.RTC_INFO("Copyright (C) 2010 Yosuke Matsusaka")
         # create outport for command

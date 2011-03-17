@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-07 14:27+0900\n"
+"POT-Creation-Date: 2011-03-17 23:27+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgid ""
 " 3. Adapter functions (supports OpenRTM , BSD socket, etc...).\n"
 msgstr ""
 
-#: ../seatsat/SEAT.py:492 ../seatsat/validateseatml.py:62
+#: ../seatsat/SEAT.py:489 ../seatsat/validateseatml.py:62
 msgid "show file open dialog in GUI"
 msgstr ""
 

@@ -136,17 +136,12 @@ class DataListener(OpenRTM_aist.ConnectorDataListenerT):
 class SEAT(OpenRTM_aist.DataFlowComponentBase):
     def __init__(self, manager):
         OpenRTM_aist.DataFlowComponentBase.__init__(self, manager)
-        self._logger = OpenRTM_aist.Manager.instance().getLogbuf("SEAT")
-        self._logger.RTC_INFO("SEAT (Speech Event Action Transfer) version " + __version__)
-        self._logger.RTC_INFO("Copyright (C) 2009-2010 Yosuke Matsusaka and Isao Hara")
-        
         if hasattr(sys, "frozen"):
             self._basedir = os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding()))
         else:
             self._basedir = os.path.dirname(__file__)
         xmlschema_doc = etree.parse(os.path.join(self._basedir, 'seatml.xsd'))
         self._xmlschema = etree.XMLSchema(xmlschema_doc)
-
         self.states = []
         self.currentstate = "start"
         self.keys = {}
@@ -157,10 +152,12 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         self._data = {}
         self._port = {}
         self._scriptfile = ["none"]
-        self._logger.RTC_INFO("component created")
 
     def onInitialize(self):
         OpenRTM_aist.DataFlowComponentBase.onInitialize(self)
+        self._logger = OpenRTM_aist.Manager.instance().getLogbuf(self._properties.getProperty("instance_name"))
+        self._logger.RTC_INFO("SEAT (Speech Event Action Transfer) version " + __version__)
+        self._logger.RTC_INFO("Copyright (C) 2009-2010 Yosuke Matsusaka and Isao Hara")
         self.bindParameter("scriptfile", self._scriptfile, "none", self.scriptfileTrans)
         return RTC.RTC_OK
 
@@ -176,7 +173,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         return RTC.RTC_OK
 
     def scriptfileTrans(self, _type, _str): 
-        self._logger.RTC_INFO("scriptfile = " + _str)
+        # self._logger.RTC_INFO("scriptfile = " + _str)
         if _str != "none":
             try:
                 self.loadSEATML(_str.split(','))
