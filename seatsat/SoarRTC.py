@@ -23,6 +23,8 @@ import types
 import threading
 import optparse
 from pprint import pformat
+from BeautifulSoup import BeautifulSoup
+from BeautifulSoup import Tag
 import OpenRTM_aist
 import RTC
 from seatsat.XableRTC import *
@@ -76,6 +78,7 @@ class SoarRTC(XableRTC):
     def __init__(self, manager):
         XableRTC.__init__(self, manager)
         self._soar = None
+        self._basewme = {}
         self._datawme = {}
         self._timewme = {}
 
@@ -107,18 +110,39 @@ class SoarRTC(XableRTC):
         self._soar.terminate()
         return RTC.RTC_OK
 
+    def docRecur(self, doc, wme):
+        agent = self._soar._agent
+        if type(doc) not in (BeautifulSoup, Tag):
+            return
+        wme2 = agent.CreateIdWME(wme, str(doc.name))
+        for c in doc.contents:
+            self.docRecur(c, wme2)
+        for a in doc.attrs:
+            try:
+                v = float(a[1])
+                agent.CreateFloatWME(wme2, str(a[0]), v)
+            except ValueError:
+                agent.CreateStringWME(wme2, str(a[0]), a[1].encode('UTF-8'))
+
     def onData(self, info, data):
         try:
             self._logger.RTC_INFO('got input: ' + pformat(info) + ', ' + pformat(data))
             t = data.tm.sec + data.tm.nsec * 1e-9
             agent = self._soar._agent
             portid = (info['component'], info['port'])
-            if portid not in self._timewme:
+            if portid not in self._basewme:
                 iid = agent.GetInputLink()
                 wme = agent.CreateIdWME(iid, 'data')
+                self._basewme[portid] = wme
                 ot = type(data.data)
                 if ot in types.StringTypes:
-                    self._datawme[portid] = agent.CreateStringWME(wme, 'data', data.data)
+                    if data.data[:5] == '<?xml':
+                        doc = BeautifulSoup(data.data)
+                        wme2 = agent.CreateIdWME(wme, 'data')
+                        self.docRecur(doc.contents[1], wme2)
+                        self._datawme[portid] = wme2
+                    else:
+                        self._datawme[portid] = agent.CreateStringWME(wme, 'data', data.data)
                 elif ot == types.IntType:
                     self._datawme[portid] = agent.CreateIntWME(wme, 'data', data.data)
                 elif ot == types.FloatType:
@@ -130,7 +154,14 @@ class SoarRTC(XableRTC):
                     agent.CreateStringWME(wme, k, v)
             else:
                 agent.Update(self._timewme[portid], t)
-                agent.Update(self._datawme[portid], data.data)
+                if type(data.data) in types.StringTypes and data.data[:5] == '<?xml':
+                    doc = BeautifulSoup(data.data)
+                    agent.DestroyWME(self._datawme[portid])
+                    wme2 = agent.CreateIdWME(self._basewme[portid], 'data')
+                    self.docRecur(doc.contents[1], wme2)
+                    self._datawme[portid] = wme2
+                else:
+                    agent.Update(self._datawme[portid], data.data)
             agent.Commit()
         except:
             self._logger.RTC_ERROR(traceback.format_exc())
