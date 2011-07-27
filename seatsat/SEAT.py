@@ -152,6 +152,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         self._data = {}
         self._port = {}
         self._scriptfile = ["none"]
+        sellf._scorelimit = [0]
 
     def onInitialize(self):
         OpenRTM_aist.DataFlowComponentBase.onInitialize(self)
@@ -159,6 +160,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         self._logger.RTC_INFO("SEAT (Speech Event Action Transfer) version " + __version__)
         self._logger.RTC_INFO("Copyright (C) 2009-2010 Yosuke Matsusaka and Isao Hara")
         self.bindParameter("scriptfile", self._scriptfile, "none", self.scriptfileTrans)
+        self.bindParameter("scorelimit", self._scorelimit, "0")
         return RTC.RTC_OK
 
     def onFinalize(self):
@@ -208,7 +210,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         return RTC.RTC_OK
 
     def send(self, name, data):
-        self._logger.RTC_INFO("sending command %s (%s)" % (data, name))
+        self._logger.RTC_INFO("sending command %s (to %s)" % (data, name))
         dtype = self.adaptortype[name][1]
         if dtype == str:
             ndata = dtype(data.encode('utf-8'))
@@ -232,15 +234,20 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         if s.count('<?xml') > 0:
             doc = BeautifulSoup(s)
             for s in doc.findAll('data'):
-                words = []
-                for w in s.findAll('word'):
-                    word = w['text']
-                    words.append(word)
-                cmds = self.lookupwithdefault(self.currentstate, host, ' '.join(words))
+                rank = int(s['rank'])
+                score = float(s['score'])
+                text = s['text']
+                self._logger.RTC_INFO("#%i: %s (%f)" % (rank, text, score))
+                if score < sellf._scorelimit[0]:
+                    self._logger.RTC_INFO("[rejected] score under limit")
+                    continue
+                cmds = self.lookupwithdefault(self.currentstate, host, text)
                 if not cmds:
-                    cmds = self.lookupwithdefault(self.currentstate, host, ''.join(words))
+                    cmds = self.lookupwithdefault(self.currentstate, host, text)
                 if cmds:
                     break
+                else:
+                    self._logger.RTC_INFO("[rejected] no matching phrases")
         else:
             cmds = self.lookupwithdefault(self.currentstate, host, s)
         if not cmds:
