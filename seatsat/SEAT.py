@@ -152,7 +152,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         self._data = {}
         self._port = {}
         self._scriptfile = ["none"]
-        sellf._scorelimit = [0]
+        self._scorelimit = [0]
 
     def onInitialize(self):
         OpenRTM_aist.DataFlowComponentBase.onInitialize(self)
@@ -408,7 +408,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
                 for e in s.findall('onexit'):
                     commands = self.parsecommands(e)
                     self._logger.RTC_INFO("register "+name+":::exit")
-                    self.keys[name+":"+source+":system:exit"] = commands # register commands to key table
+                    self.keys[name+":::exit"] = commands # register commands to key table
                 for r in s.findall('rule'):
                     words = []
                     commands = self.parsecommands(r)

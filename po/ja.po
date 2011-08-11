@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-07 14:24+0900\n"
-"PO-Revision-Date: 2011-03-07 14:25+0900\n"
+"POT-Creation-Date: 2011-03-17 23:27+0900\n"
+"PO-Revision-Date: 2011-07-27 11:19+0900\n"
 "Last-Translator: Yosuke Matsusaka <yosuke.matsusaka@aist.go.jp>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr ""
 " 2. 状態遷移モデルを用いた対話管理機能\n"
 " 3. アダプタ機能(OpenRTM, BSD socketなどとの接続ができます).\n"
 
-#: ../seatsat/SEAT.py:492
+#: ../seatsat/SEAT.py:489
 #: ../seatsat/validateseatml.py:62
 msgid "show file open dialog in GUI"
 msgstr "ファイルを開くダイアログをGUIで表示する"
