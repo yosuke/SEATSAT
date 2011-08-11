@@ -286,6 +286,19 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         return cmds
         
 
+    def stateTransfer(self, newstate):
+        try:
+            for c in self.keys[self.currentstate+":::exit"]:
+                self.activateCommand(c)
+        except KeyError:
+            pass
+        self.currentstate = newstate
+        try:
+            for c in self.keys[self.currentstate+":::entry"]:
+                self.activateCommand(c)
+        except KeyError:
+            pass
+
     def activateCommand(self, c):
         if c[0] == 'c':
             host = c[1]
@@ -300,15 +313,18 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
             data = c[2]
             if (func == "push"):
                 self.statestack.append(self.currentstate)
-                self.currentstate = data
+                self.stateTransfer(data)
             elif (func == "pop"):
                 if self.statestack.__len__() == 0:
                     self._logger.RTC_WARN("state buffer is empty")
                     return
-                self.currentstate = self.statestack.pop()
+                self.stateTransfer(self.statestack.pop())
             else:
                 self._logger.RTC_INFO("state transition from "+self.currentstate+" to "+data)
-                self.currentstate = data
+                self.stateTransfer(data)
+        elif c[0] == 'l':
+            data = c[1]
+            self._logger.RTC_INFO(data)
 
     def getDataType(self, s):
         if len(s) == 0:
@@ -334,6 +350,21 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         elif s.count("Boolean"):
             dtype = int
         return (eval("RTC.%s" % s), dtype, seq)
+
+    def parsecommands(self, r):
+        commands = []
+        for c in r.findall('command'): # get commands
+            host = c.get('host')
+            data = c.text
+            commands.append(['c', host, data])
+        for c in r.findall('statetransition'): # get statetransition (as command)
+            func = c.get('func')
+            data = c.text
+            commands.append(['t', func, data])
+        for c in r.findall('log'): # get statetransition (as command)
+            data = c.text
+            commands.append(['l', data])
+        return commands
 
     def loadSEATML(self, files):
         for f in files:
@@ -370,17 +401,17 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
                         self.adaptors[name] = SocketAdaptor(self, name, host, port)
             for s in doc.findall('state'):
                 name = s.get('name')
+                for e in s.findall('onentry'):
+                    commands = self.parsecommands(e)
+                    self._logger.RTC_INFO("register "+name+":::entry")
+                    self.keys[name+":::entry"] = commands # register commands to key table
+                for e in s.findall('onexit'):
+                    commands = self.parsecommands(e)
+                    self._logger.RTC_INFO("register "+name+":::exit")
+                    self.keys[name+":"+source+":system:exit"] = commands # register commands to key table
                 for r in s.findall('rule'):
                     words = []
-                    commands = []
-                    for c in r.findall('command'): # get commands
-                        host = c.get('host')
-                        data = c.text
-                        commands.append(['c', host, data])
-                    for c in r.findall('statetransition'): # get statetransition (as command)
-                        func = c.get('func')
-                        data = c.text
-                        commands.append(['t', func, data])
+                    commands = self.parsecommands(r)
                     for k in r.findall('key'): # get keys
                         source = k.get('source')
                         word = self.decompString([k.text])
@@ -404,10 +435,12 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         if len(self.states) == 0:
             self._logger.RTC_ERROR("no available state")
             return 1
+        self.startstate = None
         if self.states.count("start") > 0:
-            self.currentstate = "start"
+            self.startstate = "start"
         else:
-            self.currentstate = self.states[0]
+            self.startstate = self.states[0]
+        self.stateTransfer(self.startstate)
         self._logger.RTC_INFO("current state " + self.currentstate)
         self._logger.RTC_INFO("loaded successfully")
         return 0
