@@ -238,7 +238,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
                 score = float(s['score'])
                 text = s['text']
                 self._logger.RTC_INFO("#%i: %s (%f)" % (rank, text, score))
-                if score < sellf._scorelimit[0]:
+                if score < self._scorelimit[0]:
                     self._logger.RTC_INFO("[rejected] score under limit")
                     continue
                 cmds = self.lookupwithdefault(self.currentstate, host, text)
