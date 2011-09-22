@@ -72,6 +72,7 @@ setup(name='seatsat',
       [console_scripts]
       seat = seatsat.SEAT:main
       validateseatml = seatsat.validateseatml:main
+      seateditor = seatsat.seateditor:main
       seatmltographviz = seatsat.seatmltographviz:main
       seatmltosrgs = seatsat.seatmltosrgs:main
       soarrtc = seatsat.SoarRTC:main

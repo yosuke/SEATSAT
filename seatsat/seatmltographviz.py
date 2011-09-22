@@ -38,6 +38,35 @@ Examples:
   
   $ seatmltographviz sample.seatml | dot -Txlib
 '''
+
+def seatmltographviz(doc):
+    ret = ""
+
+    ret += 'digraph seatml {\n'
+    ret += 'graph [rankdir=LR];\n'
+    
+    states = map(lambda x:x.getAttribute('name'), doc.getElementsByTagName('state'))
+    states.extend(map(lambda x:x.childNodes[0].data, doc.getElementsByTagName('statetransition')))
+    ret += 'node [shape = doublecircle]; %s;\n' % ' '.join(states)
+    ret += 'node [shape = circle];\n'
+    
+    for s in doc.getElementsByTagName('state'):
+        for r in s.getElementsByTagName('rule'):
+            lab = '[label = "'
+            #lab = lab + ",".join(map(lambda x: x.childNodes[0].data, r.getElementsByTagName('key')))
+            source = r.getElementsByTagName('key').item(0).getAttribute('source')
+            if source:
+                lab = lab + source + "="
+            lab = lab + r.getElementsByTagName('key').item(0).childNodes[0].data
+            lab = lab + '"]'
+            t = r.getElementsByTagName('statetransition')
+            if len(t) > 0:
+                ret += "%s -> %s %s;\n" % (s.getAttribute('name'), t.item(0).childNodes[0].data, lab)
+            else:
+                ret += "%s -> %s %s;\n" % (s.getAttribute('name'), s.getAttribute('name'), lab)
+    ret += '}\n'
+    return ret
+
 def main():
     encoding = locale.getpreferredencoding()
     sys.stdout = codecs.getwriter(encoding)(sys.stdout, errors = "replace")
@@ -58,33 +87,8 @@ def main():
         parser.error("wrong number of arguments")
         sys.exit(1)
 
-    print 'digraph seatml {'
-    print 'graph [rankdir=LR];'
-    
     doc = parse(args[0])
-    states = map(lambda x:x.getAttribute('name'), doc.getElementsByTagName('state'))
-    states.extend(map(lambda x:x.childNodes[0].data, doc.getElementsByTagName('statetransition')))
-    print 'node [shape = doublecircle]; %s;' % ' '.join(states)
-    print 'node [shape = circle];'
-    #print 'edge [fontname = "osaka"];'
-    
-    for f in sys.argv[1:]:
-        doc = parse(f)
-        for s in doc.getElementsByTagName('state'):
-            for r in s.getElementsByTagName('rule'):
-                lab = '[label = "'
-                #lab = lab + ",".join(map(lambda x: x.childNodes[0].data, r.getElementsByTagName('key')))
-                source = r.getElementsByTagName('key').item(0).getAttribute('source')
-                if source:
-                    lab = lab + source + "="
-                lab = lab + r.getElementsByTagName('key').item(0).childNodes[0].data
-                lab = lab + '"]'
-                t = r.getElementsByTagName('statetransition')
-                if len(t) > 0:
-                    print "%s -> %s %s;" % (s.getAttribute('name'), t.item(0).childNodes[0].data, lab)
-                else:
-                    print "%s -> %s %s;" % (s.getAttribute('name'), s.getAttribute('name'), lab)
-    print '}'
+    print seatmltographviz(doc)
 
 if __name__ == '__main__':
     main()
