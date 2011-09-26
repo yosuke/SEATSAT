@@ -81,6 +81,8 @@ class SoarRTC(XableRTC):
         self._basewme = {}
         self._datawme = {}
         self._timewme = {}
+        self._dataidwme = {}
+        self._dataid = 0
 
     def onInitialize(self):
         OpenRTM_aist.DataFlowComponentBase.onInitialize(self)
@@ -150,10 +152,12 @@ class SoarRTC(XableRTC):
                 else:
                     self._logger.RTC_ERROR('unsupported data type: ' + str(ot))
                 self._timewme[portid] = agent.CreateFloatWME(wme, 'time', t)
+                self._dataidwme[portid] = agent.CreateIntWME(wme, 'id', self._dataid)
                 for k, v in info.iteritems():
                     agent.CreateStringWME(wme, k, v)
             else:
                 agent.Update(self._timewme[portid], t)
+                agent.Update(self._dataidwme[portid], self._dataid)
                 if type(data.data) in types.StringTypes and data.data[:5] == '<?xml':
                     doc = BeautifulSoup(data.data)
                     agent.DestroyWME(self._datawme[portid])
@@ -163,6 +167,7 @@ class SoarRTC(XableRTC):
                 else:
                     agent.Update(self._datawme[portid], data.data)
             agent.Commit()
+            self._dataid += 1
         except:
             self._logger.RTC_ERROR(traceback.format_exc())
 
