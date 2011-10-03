@@ -99,12 +99,18 @@ class SoarRTC(XableRTC):
         self._kernel.Shutdown()
         return RTC.RTC_OK
 
-    def docRecur(self, doc, wme):
+    def docRecur(self, doc, wme, usedwords):
         if not isinstance(doc, BeautifulSoup) and not isinstance(doc, Tag):
             return
-        wme2 = self._agent.CreateIdWME(wme, str(doc.name))
+        try:
+            usedwords[doc.name] += 1
+            name = str(doc.name) + str(usedwords[doc.name])
+        except KeyError:
+            usedwords[doc.name] = 1
+            name = str(doc.name)
+        wme2 = self._agent.CreateIdWME(wme, name)
         for c in doc.contents:
-            self.docRecur(c, wme2)
+            self.docRecur(c, wme2, usedwords)
         for a in doc.attrs:
             try:
                 v = float(a[1])
@@ -128,7 +134,8 @@ class SoarRTC(XableRTC):
                         self._logger.RTC_INFO('Parsing XML type input')
                         doc = BeautifulSoup(data.data)
                         wme2 = self._agent.CreateIdWME(wme, 'data')
-                        self.docRecur(doc.first(), wme2)
+                        usedwords = {}
+                        self.docRecur(doc.first(), wme2, usedwords)
                         self._datawme[portid] = wme2
                     else:
                         self._datawme[portid] = self._agent.CreateStringWME(wme, 'data', data.data)
@@ -150,7 +157,8 @@ class SoarRTC(XableRTC):
                     doc = BeautifulSoup(data.data)
                     self._agent.DestroyWME(self._datawme[portid])
                     wme2 = self._agent.CreateIdWME(self._basewme[portid], 'data')
-                    self.docRecur(doc.first(), wme2)
+                    usedwords = {}
+                    self.docRecur(doc.first(), wme2, usedwords)
                     self._datawme[portid] = wme2
                 else:
                     self._agent.Update(self._datawme[portid], data.data)
@@ -165,10 +173,12 @@ class SoarRTC(XableRTC):
         for i in range(0, numberCommands):
             command = self._agent.GetCommand(i)
             name  = command.GetCommandName()
+            self._logger.RTC_INFO('execute command '+name);
             if name == "rtcout":
                 port = command.GetParameterValue("port")
                 self._commanddata.data = command.GetParameterValue("data")
                 self._commandport.write()
+                self._logger.RTC_INFO('output data '+self._commanddata.data.decode('UTF-8')+' to port '+port);
             command.AddStatusComplete()
         self._agent.ClearOutputLinkChanges()
         if self._kernel.HadError():
