@@ -32,7 +32,11 @@ class ConsoleIn(OpenRTM_aist.DataFlowComponentBase):
         OpenRTM_aist.setTimestamp(self._data)
         self._outport.write()
         time.sleep(5)
-        self._data.data = "バイバイ"
+        self._data.data = "こんばんは"
+        OpenRTM_aist.setTimestamp(self._data)
+        self._outport.write()
+        time.sleep(5)
+        self._data.data = "未知語です"
         OpenRTM_aist.setTimestamp(self._data)
         self._outport.write()
         time.sleep(5)

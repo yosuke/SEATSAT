@@ -4,5 +4,6 @@ seatsat/XableRTC.py
 seatsat/__init__.py
 seatsat/seatmltographviz.py
 seatsat/seatmltosrgs.py
+seatsat/seateditor.py
 seatsat/utils.py
 seatsat/validateseatml.py

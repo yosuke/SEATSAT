@@ -119,6 +119,10 @@ seat_spec = ["implementation_id", "SEAT",
              "language",          "Python",
              "lang_type",         "script",
              "conf.default.scriptfile", "none",
+             "conf.__description__.scriptfile", _("Script file to load (unimplemented).").encode('UTF-8'),
+             "conf.default.scorelimit", "0.0",
+             "conf.__widget__.scorelimit", "slider",
+             "conf.__description__.scorelimit", _("Lower limit of speech recognition score to consider.").encode('UTF-8'),
              "exec_cxt.periodic.rate", "100.0",
              ""]
 
@@ -152,7 +156,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         self._data = {}
         self._port = {}
         self._scriptfile = ["none"]
-        self._scorelimit = [0]
+        self._scorelimit = [0.0]
 
     def onInitialize(self):
         OpenRTM_aist.DataFlowComponentBase.onInitialize(self)
@@ -160,7 +164,7 @@ class SEAT(OpenRTM_aist.DataFlowComponentBase):
         self._logger.RTC_INFO("SEAT (Speech Event Action Transfer) version " + __version__)
         self._logger.RTC_INFO("Copyright (C) 2009-2010 Yosuke Matsusaka and Isao Hara")
         self.bindParameter("scriptfile", self._scriptfile, "none", self.scriptfileTrans)
-        self.bindParameter("scorelimit", self._scorelimit, "0")
+        self.bindParameter("scorelimit", self._scorelimit, "0.0")
         return RTC.RTC_OK
 
     def onFinalize(self):
