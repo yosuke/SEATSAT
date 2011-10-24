@@ -44,6 +44,7 @@ InstallDirRegKey ${INSTDIR_REG_ROOT} ${INSTDIR_REG_KEY} "InstallDir"
 
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE $(MUILicense)
+!insertmacro MUI_PAGE_LICENSE $(MUILicense_Soar)
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
@@ -65,6 +66,8 @@ InstallDirRegKey ${INSTDIR_REG_ROOT} ${INSTDIR_REG_KEY} "InstallDir"
 
 LicenseLangString MUILicense ${LANG_ENGLISH} "${TOP_SRCDIR}\COPYING"
 LicenseLangString MUILicense ${LANG_JAPANESE} "${TOP_SRCDIR}\COPYING"
+LicenseLangString MUILicense_Soar ${LANG_ENGLISH} "\Soar-Suite-9.3.0-win-x86\license.txt"
+LicenseLangString MUILicense_soar ${LANG_JAPANESE} "\Soar-Suite-9.3.0-win-x86\license.txt"
 
 ;--------------------------------
 ;Reserve Files
@@ -86,6 +89,7 @@ Section $(TEXT_SecBase) SecBase
   ; Main executables
   File "${TOP_BUILDDIR}\dist\SEAT.exe"
   File "${TOP_BUILDDIR}\dist\validateseatml.exe"
+  File "${TOP_BUILDDIR}\dist\seateditor.exe"
   File "${TOP_BUILDDIR}\dist\SoarRTC.exe"
   File "${TOP_BUILDDIR}\dist\w9xpopen.exe"
   File "rtc.conf"
@@ -127,6 +131,7 @@ Section $(TEXT_SecBase) SecBase
   CreateShortCut "${SCDIR}\Uninstall SEATSAT.lnk" "$INSTDIR\uninstall.exe"
   CreateShortCut "${SCDIR}\SEAT.lnk" "$INSTDIR\SEAT.exe" "--gui"
   CreateShortCut "${SCDIR}\validateseatml.lnk" "$INSTDIR\validateseatml.exe" "--gui"
+  CreateShortCut "${SCDIR}\seateditor.lnk" "$INSTDIR\seateditor.exe"
   CreateShortCut "${SCDIR}\SoarRTC.lnk" "$INSTDIR\SoarRTC.exe" "--gui"
 SectionEnd
 
@@ -174,6 +179,7 @@ Section "Uninstall"
   Delete "${SCDIR}\Uninstall SEATSAT.lnk"
   Delete "${SCDIR}\SEAT.lnk"
   Delete "${SCDIR}\validateseatml.lnk"
+  Delete "${SCDIR}\seateditor.lnk"
   Delete "${SCDIR}\SoarRTC.lnk"
   RMDir "${SCDIR}"
 

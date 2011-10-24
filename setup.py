@@ -38,11 +38,12 @@ if sys.platform == "win32":
                     "seatsat/validateseatml.py",
                     "seatsat/seatmltographviz.py",
                     "seatsat/seatmltosrgs.py",
+                    "seatsat/seateditor.py",
                     "seatsat/SoarRTC.py"
                     ],
         "options": {
             "py2exe": {
-                "includes": "xml.etree.ElementTree, lxml._elementpath, BeautifulSoup, OpenRTM_aist, RTC, gzip",
+                "includes": "xml.etree.ElementTree, lxml._elementpath, BeautifulSoup, OpenRTM_aist, RTC, gzip, cairo, pango, pangocairo, atk, gobject, gio, glib, gtk, gtksourceview2",
                 "dll_excludes": ["MSVCP90.dll", "ierutil.dll", "powrprof.dll", "msimg32.dll", "mpr.dll", "urlmon.dll", "dnsapi.dll"],
             }
         }
