@@ -92,6 +92,8 @@ Section $(TEXT_SecBase) SecBase
   File "${TOP_BUILDDIR}\dist\seateditor.exe"
   File "${TOP_BUILDDIR}\dist\SoarRTC.exe"
   File "${TOP_BUILDDIR}\dist\w9xpopen.exe"
+  File "${TOP_BUILDDIR}\dist\dot.exe"
+  File "${TOP_BUILDDIR}\dist\config6"
   File "rtc.conf"
   File "${TOP_SRCDIR}\seatsat\seatml.xsd"
 
@@ -99,6 +101,8 @@ Section $(TEXT_SecBase) SecBase
   File /r "${TOP_BUILDDIR}\dist\*.pyd"
   File /r "${TOP_BUILDDIR}\dist\*.dll"
   File "${TOP_BUILDDIR}\dist\library.zip"
+  File /r "${TOP_BUILDDIR}\dist\share"
+  File /r "${TOP_BUILDDIR}\dist\etc"
 
   ; Information/documentation files
 ;  File "/oname=ChangeLog.txt" "${TOP_SRCDIR}\ChangeLog"
@@ -109,7 +113,7 @@ Section $(TEXT_SecBase) SecBase
   !insertmacro UNINSTALL.LOG_CLOSE_INSTALL
 
   ; tcl files
-  File /r "${TOP_BUILDDIR}\dist\tcl"
+  ;File /r "${TOP_BUILDDIR}\dist\tcl"
 
   ;Store installation folder
   WriteRegStr HKLM "Software\${PACKAGE_NAME}" "" $INSTDIR
@@ -172,7 +176,7 @@ Section "Uninstall"
   !insertmacro UNINSTALL.LOG_UNINSTALL "$INSTDIR"
   !insertmacro UNINSTALL.LOG_END_UNINSTALL
 
-  RMDir /r "$INSTDIR\tcl"
+  ;RMDir /r "$INSTDIR\tcl"
 
   Delete "$INSTDIR\uninstall.exe"
 
