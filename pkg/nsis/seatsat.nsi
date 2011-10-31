@@ -13,7 +13,7 @@
 ;General
 
 !define PACKAGE_NAME "SEATSAT"
-!define PACKAGE_VERSION "1.03"
+!define PACKAGE_VERSION "2.00"
 !define OUTFILE "${PACKAGE_NAME}-${PACKAGE_VERSION}-installer.exe"
 !define TOP_SRCDIR "..\.."
 !define TOP_BUILDDIR "..\.."
