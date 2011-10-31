@@ -23,6 +23,7 @@ from lxml.html import soupparser
 import pango
 import gtk
 import gtksourceview2
+import gobject
 from pprint import pprint
 from StringIO import StringIO
 import tempfile
@@ -94,70 +95,6 @@ class AboutDialog(gtk.AboutDialog):
         self.set_transient_for(parent)
         self.connect("response", lambda d, r: d.destroy())
 
-class ValidationThread(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self._loop = True
-        self._parent_window = None
-        self._updated = False
-        self._data = ''
-
-    def run(self):
-        # load xml schema definition for validating SRGS format
-        schemafile = os.path.join(basedir, 'seatml.xsd')
-        with gtk.gdk.lock:
-            self._parent_window.set_info("reading schema definition: " + schemafile)
-        xmlschema_doc = etree.parse(schemafile)
-        self._xmlschema = etree.XMLSchema(xmlschema_doc)
-        with gtk.gdk.lock:
-            self._parent_window.set_info("finish reading schema")
-        while self._loop == True:
-            time.sleep(0.1)
-            if self._updated == True:
-                text = self._data
-                self._updated = False
-                if self.validatesrgs(text) == True:
-                    self.drawdot(text)
-
-    def exit(self):
-        self._loop = False
-
-    def set_parent_window(self, win):
-        self._parent_window = win
-
-    def set_data(self, text):
-        self._updated = True
-        self._data = text
-
-    def validatesrgs(self, xmlstr):
-        with gtk.gdk.lock:
-            self._parent_window.set_info("validating")
-        try:
-            doc = etree.fromstring(xmlstr)
-            if hasattr(doc, "xinclude"):
-                doc.xinclude()
-            self._xmlschema.assert_(doc)
-            with gtk.gdk.lock:
-                self._parent_window.set_info("valid")
-        except etree.XMLSyntaxError, e:
-            with gtk.gdk.lock:
-                self._parent_window.set_info("[error] " + str(e))
-            return False
-        except AssertionError, e:
-            with gtk.gdk.lock:
-                self._parent_window.set_info("[error] " + str(e))
-            return False
-        return True
-
-    def drawdot(self, xmlstr):
-        try:
-            doc = parse(StringIO(xmlstr))
-            dotcode = seatmltographviz(doc)
-            with gtk.gdk.lock:
-                self._parent_window._xdot.set_dotcode(dotcode)
-        except:
-            pass
-
 class MainWindow(gtk.Window):
     ui = '''
     <ui>
@@ -175,6 +112,7 @@ class MainWindow(gtk.Window):
         # initialize main window
         gtk.Window.__init__(self, *args, **kwargs)
         self._filename = None
+        self._data = None
 
         self._uimanager = gtk.UIManager()
 
@@ -228,9 +166,9 @@ class MainWindow(gtk.Window):
         self.set_size_request(400, 400)
         self.resize(600, 520)
 
-        self._validationthread = ValidationThread()
-        self._validationthread.set_parent_window(self)
-        self._validationthread.start()
+        schemafile = os.path.join(basedir, 'seatml.xsd')
+        xmlschema_doc = etree.parse(schemafile)
+        self._xmlschema = etree.XMLSchema(xmlschema_doc)
 
         self.update_title()
 
@@ -246,7 +184,6 @@ class MainWindow(gtk.Window):
 
     def quit(self, *args):
         print "quiting"
-        self._validationthread.exit()
         gtk.main_quit()
 
     def keypressevent (self, widget, event):
@@ -266,7 +203,7 @@ class MainWindow(gtk.Window):
         return False
 
     def keyreleaseevent (self, widget, event):
-        if self._sourcebuf.get_modified():
+        if self._data != self._sourcebuf.props.text:
             self._data = self._sourcebuf.props.text
             self.validate()
         self.update_title()
@@ -284,11 +221,25 @@ class MainWindow(gtk.Window):
             self.validate()
         self.update_title()
 
-    def validate(self):
-        self._validationthread.set_data(self._data)
+    def validate(self, *args):
+        self.set_info("validating")
+        try:
+            doc = etree.fromstring(self._data)
+            if hasattr(doc, "xinclude"):
+                doc.xinclude()
+            self._xmlschema.assert_(doc)
+            self.set_info("valid")
+            doc = parse(StringIO(self._data))
+            dotcode = seatmltographviz(doc)
+            self._xdot.set_dotcode(dotcode)
+        except etree.XMLSyntaxError, e:
+            self.set_info("[error] " + str(e))
+        except AssertionError, e:
+            self.set_info("[error] " + str(e))
 
     def set_info(self, infostr):
         self._infolabel.set_text(infostr)
+        print infostr
 
     def format_data(self, *args):
         doc = None
@@ -389,6 +340,7 @@ initialdata = '''<?xml version="1.0" encoding="UTF-8"?>
 
 def main():
     gtk.gdk.threads_init()
+    gtk.gdk.threads_enter()
     win = MainWindow()
     win.show_all()
     if len(sys.argv) >= 2:
@@ -398,6 +350,7 @@ def main():
         win.set_data(initialdata, False)
     win.update_title()
     gtk.main()
+    gobject.idle_add(win.validate, 0.2)
 
 if __name__ == '__main__':
     main()

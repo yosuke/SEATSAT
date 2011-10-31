@@ -86,7 +86,7 @@ def askopenfilename(title=''):
     if response == gtk.RESPONSE_OK:
         ret = dialog.get_filename()
     dialog.destroy()
-    return None
+    return ret
 
 def askopenfilenames(title=''):
     #if platform.system() == 'Windows':
@@ -118,7 +118,7 @@ def askopenfilenames(title=''):
     if response == gtk.RESPONSE_OK:
         ret = dialog.get_filenames()
     dialog.destroy()
-    return None
+    return ret
 
 def addmanageropts(parser):
     parser.add_option('-a', '--manager-service', dest='managerservice', action='store_true',
