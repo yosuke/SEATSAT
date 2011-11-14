@@ -96,6 +96,7 @@ Section $(TEXT_SecBase) SecBase
   File "${TOP_BUILDDIR}\dist\config6"
   File "rtc.conf"
   File "${TOP_SRCDIR}\seatsat\seatml.xsd"
+  File "vcredist_x86.exe"
 
   ; Required Libralies
   File /r "${TOP_BUILDDIR}\dist\*.pyd"
@@ -137,6 +138,13 @@ Section $(TEXT_SecBase) SecBase
   CreateShortCut "${SCDIR}\validateseatml.lnk" "$INSTDIR\validateseatml.exe" "--gui"
   CreateShortCut "${SCDIR}\seateditor.lnk" "$INSTDIR\seateditor.exe"
   CreateShortCut "${SCDIR}\SoarRTC.lnk" "$INSTDIR\SoarRTC.exe" "--gui"
+
+  ClearErrors
+  ReadRegDword $R0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}" "Version"
+  IfErrors 0 VSRedistInstalled
+    ExecWait '"$INSTDIR\vcredist_x86.exe" /q:a /c:"VCREDI~1.EXE /q:a /c:""msiexec /i vcredist.msi /qb!"" "'
+  VSRedistInstalled:
+  
 SectionEnd
 
 ;--------------------------------

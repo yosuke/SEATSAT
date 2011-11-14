@@ -44,7 +44,7 @@ if sys.platform == "win32":
         "options": {
             "py2exe": {
                 "includes": "xml.etree.ElementTree, lxml._elementpath, BeautifulSoup, OpenRTM_aist, RTC, gzip, cairo, pango, pangocairo, atk, gobject, gio, glib, gtk, gtksourceview2",
-                "dll_excludes": ["MSVCP90.dll", "ierutil.dll", "powrprof.dll", "msimg32.dll", "mpr.dll", "urlmon.dll", "dnsapi.dll"],
+                "dll_excludes": ["USP10.dll", "NSI.dll", "MSIMG32.dll", "MSVCP90.dll", "ierutil.dll", "powrprof.dll", "msimg32.dll", "mpr.dll", "urlmon.dll", "dnsapi.dll"],
             }
         }
     }
